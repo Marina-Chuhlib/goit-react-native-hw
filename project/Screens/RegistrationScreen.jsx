@@ -13,6 +13,8 @@ import {
 
 const RegistrationScreen = () => {
   console.log(Platform.OS);
+  console.log("Hello")
+  
   // const [isKeyboard]
   return (
     <ImageBackground
@@ -81,8 +83,7 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
     paddingRight: 16,
     backgroundColor: "#FFFFFF",
-    borderTopRightRadius: 25,
-    borderTopLeftRadius: 25,
+    borderRadius: "25 25 0 0",
     justifyContent: "center",
     //    ...Platform.select({
     //   ios: {
