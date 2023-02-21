@@ -29,6 +29,10 @@ const RegistrationScreen = () => {
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
+  const [focusInputUsername, setFocusInputUsername] = useState(false);
+  const [focusInputEmail, setFocusInputEmail] = useState(false);
+  const [focusInputPassword, setFocusInputPassword] = useState(false);
+
   const [fontsLoaded] = useFonts({
     RobotoRegular: require("../assets/fonts/Roboto-Regular.ttf"),
     RobotoMedium: require("../assets/fonts/Roboto-Medium.ttf"),
@@ -46,8 +50,6 @@ const RegistrationScreen = () => {
     console.log(state);
     setState(initialState);
   };
-
-  console.log(state.username, "hello");
 
   if (!fontsLoaded) {
     return null;
@@ -80,18 +82,20 @@ const RegistrationScreen = () => {
               >
                 <View style={styles.inputUserName}>
                   <TextInput
-                    style={styles.input}
-                    //       style={{
-                    //   ...styles.input,
-                    //   borderColor: onPressIn ? "#FF6C00" : "#F6F6F6",
-                    // }}
+                    style={{
+                      ...styles.input,
+                      borderColor: focusInputUsername ? "#FF6C00" : "#F6F6F6",
+                    }}
                     textAlign={"left"}
                     placeholderTextColor={"#BDBDBD"}
                     textContentType="username"
                     value={state.username}
                     placeholder="Логин"
                     onFocus={() => {
-                      setIsShowKeyboard(true);
+                      setIsShowKeyboard(true), setFocusInputUsername(true);
+                    }}
+                    onBlur={() => {
+                      setFocusInputUsername(false);
                     }}
                     onChangeText={(value) =>
                       setState((prevState) => ({
@@ -103,18 +107,21 @@ const RegistrationScreen = () => {
                 </View>
                 <View style={styles.inputMail}>
                   <TextInput
-                    style={styles.input}
-                    //         style={{
-                    //   ...styles.input,
-                    //   borderColor: onPressIn ? "#FF6C00" : "#F6F6F6",
-                    // }}
+                    style={{
+                      ...styles.input,
+                      borderColor: focusInputEmail ? "#FF6C00" : "#F6F6F6",
+                    }}
                     textAlign={"left"}
                     placeholderTextColor={"#BDBDBD"}
+                    keyboardType="email-address"
                     textContentType="emailAddress"
                     value={state.emailAddress}
                     placeholder="Адрес электронной почты"
                     onFocus={() => {
-                      setIsShowKeyboard(true);
+                      setIsShowKeyboard(true), setFocusInputEmail(true);
+                    }}
+                    onBlur={() => {
+                      setFocusInputEmail(false);
                     }}
                     onChangeText={(value) =>
                       setState((prevState) => ({
@@ -127,11 +134,10 @@ const RegistrationScreen = () => {
 
                 <View style={styles.inputPassword}>
                   <TextInput
-                    style={styles.input}
-                    //        style={{
-                    //   ...styles.input,
-                    //   // borderColor:  TextInput.isFocused()  ? "#FF6C00" : "#F6F6F6",
-                    // }}
+                    style={{
+                      ...styles.input,
+                      borderColor: focusInputPassword ? "#FF6C00" : "#F6F6F6",
+                    }}
                     textAlign={"left"}
                     placeholderTextColor={"#BDBDBD"}
                     textContentType="password"
@@ -139,9 +145,11 @@ const RegistrationScreen = () => {
                     secureTextEntry={true}
                     placeholder="Пароль"
                     onFocus={() => {
-                      setIsShowKeyboard(true);
+                      setIsShowKeyboard(true), setFocusInputPassword(true);
                     }}
-                    // onBlur={onPressInput}
+                    onBlur={() => {
+                      setFocusInputPassword(false);
+                    }}
                     onChangeText={(value) =>
                       setState((prevState) => ({
                         ...prevState,
@@ -221,7 +229,6 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     paddingLeft: 16,
     borderWidth: 1,
-    // borderColor: '#E8E8E8',
     backgroundColor: "#F6F6F6",
     height: 50,
     borderRadius: 8,

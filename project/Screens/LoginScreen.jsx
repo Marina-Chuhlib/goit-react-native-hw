@@ -27,13 +27,13 @@ const LoginScreen = () => {
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
+  const [focusInputEmail, setFocusInputEmail] = useState(false);
+  const [focusInputPassword, setFocusInputPassword] = useState(false);
+
   const [fontsLoaded] = useFonts({
     RobotoRegular: require("../assets/fonts/Roboto-Regular.ttf"),
     RobotoMedium: require("../assets/fonts/Roboto-Medium.ttf"),
   });
-
-  const [focusInputEmail, setFocusInputEmail] = useState(false);
-  const [focusInputPassword, setFocusInputPassword] = useState(false);
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -56,6 +56,7 @@ const LoginScreen = () => {
   //     setFocusInput(false);
   //     console.log("Blur");
   //   };
+    
   if (!fontsLoaded) {
     return null;
   }
@@ -81,13 +82,13 @@ const LoginScreen = () => {
               >
                 <View style={styles.inputMail}>
                   <TextInput
-                    // style={styles.input}
                     style={{
                       ...styles.input,
                       borderColor: focusInputEmail ? "#FF6C00" : "#F6F6F6",
                     }}
                     textAlign={"left"}
                     placeholderTextColor={"#BDBDBD"}
+                    keyboardType="email-address"
                     textContentType="emailAddress"
                     value={state.emailAddress}
                     placeholder="Адрес электронной почты"
@@ -108,7 +109,6 @@ const LoginScreen = () => {
 
                 <View style={styles.inputPassword}>
                   <TextInput
-                    // style={styles.input}
                     style={{
                       ...styles.input,
                       borderColor: focusInputPassword ? "#FF6C00" : "#F6F6F6",
@@ -119,9 +119,6 @@ const LoginScreen = () => {
                     value={state.password}
                     secureTextEntry={true}
                     placeholder="Пароль"
-                    // onFocus={() => {
-                    //   setIsShowKeyboard(true);
-                    // }}
                     onFocus={() => {
                       setIsShowKeyboard(true), setFocusInputPassword(true);
                     }}
