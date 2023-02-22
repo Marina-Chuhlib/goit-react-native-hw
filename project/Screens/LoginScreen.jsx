@@ -27,8 +27,14 @@ const LoginScreen = () => {
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
-  const [focusInputEmail, setFocusInputEmail] = useState(false);
-  const [focusInputPassword, setFocusInputPassword] = useState(false);
+  const [isFocusInput, setIsFocusInput] = useState({
+    emailAddress: false,
+    password: false,
+  });
+  const [isShowPassword, setIsShowPassword] = useState({
+    boolean: true,
+    text: "Показать",
+  });
 
   const [fontsLoaded] = useFonts({
     RobotoRegular: require("../assets/fonts/Roboto-Regular.ttf"),
@@ -44,19 +50,10 @@ const LoginScreen = () => {
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
+    setIsShowPassword({ boolean: true, text: "Показать" });
     setState(initialState);
   };
 
-  //   const onFocusInput = () => {
-  //       setIsShowKeyboard(true);
-  //       setFocusInputEmail(true)
-  //     console.log("focusInput");
-  //   };
-  //   const onBlurInput = () => {
-  //     setFocusInput(false);
-  //     console.log("Blur");
-  //   };
-    
   if (!fontsLoaded) {
     return null;
   }
@@ -64,14 +61,20 @@ const LoginScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <ImageBackground
-        source={require("../assets/photo-BG-2x.jpg")}
+        source={require("../assets/image/photo-BG-2x.jpg")}
         style={styles.image}
       >
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
           <View onLayout={onLayoutRootView}>
-            <View style={styles.formWrapper}>
+            <View
+              // style={styles.formWrapper}
+              style={{
+                ...styles.formWrapper,
+                marginTop: isShowKeyboard ? 456.5 : 219,
+              }}
+            >
               <Text style={styles.title}>Войти</Text>
 
               <View
@@ -84,7 +87,9 @@ const LoginScreen = () => {
                   <TextInput
                     style={{
                       ...styles.input,
-                      borderColor: focusInputEmail ? "#FF6C00" : "#F6F6F6",
+                      borderColor: isFocusInput.emailAddress
+                        ? "#FF6C00"
+                        : "#F6F6F6",
                     }}
                     textAlign={"left"}
                     placeholderTextColor={"#BDBDBD"}
@@ -93,10 +98,17 @@ const LoginScreen = () => {
                     value={state.emailAddress}
                     placeholder="Адрес электронной почты"
                     onFocus={() => {
-                      setIsShowKeyboard(true), setFocusInputEmail(true);
+                      setIsShowKeyboard(true),
+                        setIsFocusInput({
+                          ...isFocusInput,
+                          emailAddress: true,
+                        });
                     }}
                     onBlur={() => {
-                      setFocusInputEmail(false);
+                      setIsFocusInput({
+                        ...isFocusInput,
+                        emailAddress: false,
+                      });
                     }}
                     onChangeText={(value) =>
                       setState((prevState) => ({
@@ -111,19 +123,28 @@ const LoginScreen = () => {
                   <TextInput
                     style={{
                       ...styles.input,
-                      borderColor: focusInputPassword ? "#FF6C00" : "#F6F6F6",
+                      borderColor: isFocusInput.password
+                        ? "#FF6C00"
+                        : "#F6F6F6",
                     }}
                     textAlign={"left"}
                     placeholderTextColor={"#BDBDBD"}
                     textContentType="password"
                     value={state.password}
-                    secureTextEntry={true}
+                    secureTextEntry={isShowPassword.boolean}
                     placeholder="Пароль"
                     onFocus={() => {
-                      setIsShowKeyboard(true), setFocusInputPassword(true);
+                      setIsShowKeyboard(true),
+                        setIsFocusInput({
+                          ...isFocusInput,
+                          password: true,
+                        });
                     }}
                     onBlur={() => {
-                      setFocusInputPassword(false);
+                      setIsFocusInput({
+                        ...isFocusInput,
+                        password: false,
+                      });
                     }}
                     onChangeText={(value) =>
                       setState((prevState) => ({
@@ -132,7 +153,14 @@ const LoginScreen = () => {
                       }))
                     }
                   />
-                  <Text style={styles.showPass}>Показать</Text>
+                  <Text
+                    style={styles.showPass}
+                    onPress={() =>
+                      setIsShowPassword({ boolean: false, text: "" })
+                    }
+                  >
+                    {isShowPassword.text}
+                  </Text>
                 </View>
                 <TouchableOpacity
                   style={styles.button}
@@ -187,9 +215,9 @@ const styles = StyleSheet.create({
     fontWeight: 400,
     fontSize: 16,
     lineHeight: 19,
+    color: "#212121",
     paddingLeft: 16,
     borderWidth: 1,
-    // borderColor: '#E8E8E8',
     backgroundColor: "#F6F6F6",
     height: 50,
     borderRadius: 8,
