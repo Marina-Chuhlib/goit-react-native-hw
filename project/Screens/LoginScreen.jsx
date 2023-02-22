@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -23,7 +23,7 @@ const initialState = {
 SplashScreen.preventAutoHideAsync();
 
 const LoginScreen = () => {
-  console.log(Platform.OS);
+  // console.log(Platform.OS);
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
@@ -41,6 +41,8 @@ const LoginScreen = () => {
     RobotoMedium: require("../assets/fonts/Roboto-Medium.ttf"),
   });
 
+
+
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
@@ -50,6 +52,7 @@ const LoginScreen = () => {
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
+    console.log(state);
     setIsShowPassword({ boolean: true, text: "Показать" });
     setState(initialState);
   };
@@ -69,13 +72,25 @@ const LoginScreen = () => {
         >
           <View onLayout={onLayoutRootView}>
             <View
-              // style={styles.formWrapper}
               style={{
                 ...styles.formWrapper,
-                marginTop: isShowKeyboard ? 456.5 : 219,
+
+                ...Platform.select({
+                  ios: {
+                    marginTop: isShowKeyboard ? 456 : 0,
+                  },
+                  android: {
+                    marginTop: isShowKeyboard ? 0 : 0,
+                  },
+                }),
+            
               }}
             >
-              <Text style={styles.title}>Войти</Text>
+              <Text
+                style={{ ...styles.title, marginTop: isShowKeyboard ? 24 : 0 }}
+              >
+                Войти
+              </Text>
 
               <View
                 style={{
@@ -89,6 +104,9 @@ const LoginScreen = () => {
                       ...styles.input,
                       borderColor: isFocusInput.emailAddress
                         ? "#FF6C00"
+                        : "#F6F6F6",
+                        backgroundColor: isFocusInput.emailAddress
+                        ? "#FFFFFF"
                         : "#F6F6F6",
                     }}
                     textAlign={"left"}
@@ -125,6 +143,9 @@ const LoginScreen = () => {
                       ...styles.input,
                       borderColor: isFocusInput.password
                         ? "#FF6C00"
+                        : "#F6F6F6",
+                        backgroundColor: isFocusInput.password
+                        ? "#FFFFFF"
                         : "#F6F6F6",
                     }}
                     textAlign={"left"}
@@ -202,7 +223,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "RobotoMedium",
     fontStyle: "normal",
-    fontWeight: 500,
     fontSize: 30,
     lineHeight: 35,
     letterSpacing: 0.16,
@@ -212,13 +232,11 @@ const styles = StyleSheet.create({
   input: {
     fontFamily: "RobotoRegular",
     fontStyle: "normal",
-    fontWeight: 400,
     fontSize: 16,
     lineHeight: 19,
     color: "#212121",
     paddingLeft: 16,
     borderWidth: 1,
-    backgroundColor: "#F6F6F6",
     height: 50,
     borderRadius: 8,
   },
@@ -231,7 +249,6 @@ const styles = StyleSheet.create({
   showPass: {
     fontFamily: "RobotoRegular",
     fontStyle: "normal",
-    fontWeight: 400,
     lineHeight: 19,
     fontSize: 16,
     position: "absolute",
@@ -250,14 +267,12 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: "RobotoRegular",
     fontStyle: "normal",
-    fontWeight: 400,
     lineHeight: 19,
     color: "#FFFFFF",
   },
   aside: {
     fontFamily: "RobotoRegular",
     fontStyle: "normal",
-    fontWeight: 400,
     lineHeight: 19,
     marginTop: 16,
     textAlign: "center",

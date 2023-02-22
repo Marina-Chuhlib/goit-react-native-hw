@@ -73,7 +73,15 @@ const RegistrationScreen = () => {
             <View
               style={{
                 ...styles.formWrapper,
-                marginTop: isShowKeyboard ? 350 : 219,
+
+                ...Platform.select({
+                  ios: {
+                    marginTop: isShowKeyboard ? 350 : 219,
+                  },
+                  android: {
+                    marginTop: isShowKeyboard ? 100 : 50,
+                  },
+                }),
               }}
             >
               <View style={styles.imgBox}>
@@ -101,6 +109,9 @@ const RegistrationScreen = () => {
                       ...styles.input,
                       borderColor: isFocusInput.username
                         ? "#FF6C00"
+                        : "#F6F6F6",
+                         backgroundColor: isFocusInput.username
+                        ? "#FFFFFF"
                         : "#F6F6F6",
                     }}
                     textAlign={"left"}
@@ -136,6 +147,10 @@ const RegistrationScreen = () => {
                       borderColor: isFocusInput.emailAddress
                         ? "#FF6C00"
                         : "#F6F6F6",
+                         backgroundColor: isFocusInput.emailAddress
+                        ? "#FFFFFF"
+                        : "#F6F6F6",
+                      
                     }}
                     textAlign={"left"}
                     placeholderTextColor={"#BDBDBD"}
@@ -171,6 +186,9 @@ const RegistrationScreen = () => {
                       ...styles.input,
                       borderColor: isFocusInput.password
                         ? "#FF6C00"
+                        : "#F6F6F6",
+                          backgroundColor: isFocusInput.password
+                        ? "#FFFFFF"
                         : "#F6F6F6",
                     }}
                     textAlign={"left"}
@@ -243,7 +261,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     justifyContent: "center",
   },
-  form: {},
   imgBox: {
     position: "absolute",
     left: "35%",
@@ -267,7 +284,6 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: "RobotoMedium",
     fontStyle: "normal",
-    fontWeight: 500,
     fontSize: 30,
     lineHeight: 35,
     letterSpacing: 0.16,
@@ -277,13 +293,11 @@ const styles = StyleSheet.create({
   input: {
     fontFamily: "RobotoRegular",
     fontStyle: "normal",
-    fontWeight: 400,
     fontSize: 16,
     lineHeight: 19,
     color: "#212121",
     paddingLeft: 16,
     borderWidth: 1,
-    backgroundColor: "#F6F6F6",
     height: 50,
     borderRadius: 8,
   },
@@ -299,7 +313,6 @@ const styles = StyleSheet.create({
   showPass: {
     fontFamily: "RobotoRegular",
     fontStyle: "normal",
-    fontWeight: 400,
     lineHeight: 19,
     fontSize: 16,
     position: "absolute",
@@ -318,14 +331,12 @@ const styles = StyleSheet.create({
   buttonText: {
     fontFamily: "RobotoRegular",
     fontStyle: "normal",
-    fontWeight: 400,
     lineHeight: 19,
     color: "#FFFFFF",
   },
   aside: {
     fontFamily: "RobotoRegular",
     fontStyle: "normal",
-    fontWeight: 400,
     lineHeight: 19,
     marginTop: 16,
     textAlign: "center",
