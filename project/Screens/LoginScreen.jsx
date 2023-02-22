@@ -41,8 +41,6 @@ const LoginScreen = () => {
     RobotoMedium: require("../assets/fonts/Roboto-Medium.ttf"),
   });
 
-
-
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
@@ -80,10 +78,9 @@ const LoginScreen = () => {
                     marginTop: isShowKeyboard ? 456 : 0,
                   },
                   android: {
-                    marginTop: isShowKeyboard ? 0 : 0,
+                    marginTop: isShowKeyboard ? -50 : 0,
                   },
                 }),
-            
               }}
             >
               <Text
@@ -105,7 +102,7 @@ const LoginScreen = () => {
                       borderColor: isFocusInput.emailAddress
                         ? "#FF6C00"
                         : "#F6F6F6",
-                        backgroundColor: isFocusInput.emailAddress
+                      backgroundColor: isFocusInput.emailAddress
                         ? "#FFFFFF"
                         : "#F6F6F6",
                     }}
@@ -144,7 +141,7 @@ const LoginScreen = () => {
                       borderColor: isFocusInput.password
                         ? "#FF6C00"
                         : "#F6F6F6",
-                        backgroundColor: isFocusInput.password
+                      backgroundColor: isFocusInput.password
                         ? "#FFFFFF"
                         : "#F6F6F6",
                     }}
