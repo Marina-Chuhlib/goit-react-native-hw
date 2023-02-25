@@ -21,8 +21,9 @@ const initialState = {
 
 SplashScreen.preventAutoHideAsync();
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
   // console.log(Platform.OS);
+  console.log(navigation)
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
@@ -51,6 +52,7 @@ const LoginScreen = () => {
     Keyboard.dismiss();
     console.log(state);
     setIsShowPassword({ boolean: true, text: "Показать" });
+    navigation.navigate("Registration")
     setState(initialState);
   };
 
@@ -187,6 +189,8 @@ const LoginScreen = () => {
                     style={styles.button}
                     activeOpacity={0.8}
                     onPress={keyboardHide}
+                    // onPress={() => navigation.navigate("Registration")}
+                  
                   >
                     <Text style={styles.buttonText}>Войти</Text>
                   </TouchableOpacity>
