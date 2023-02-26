@@ -9,21 +9,22 @@ import {
   Platform,
   KeyboardAvoidingView,
   Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 const initialState = {
   emailAddress: "",
   password: "",
 };
 
-SplashScreen.preventAutoHideAsync();
-
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({ navigation }) => {
   // console.log(Platform.OS);
-  console.log(navigation)
+  console.log(navigation);
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
@@ -31,10 +32,7 @@ const LoginScreen = ({navigation}) => {
     emailAddress: false,
     password: false,
   });
-  const [isShowPassword, setIsShowPassword] = useState({
-    boolean: true,
-    text: "Показать",
-  });
+  const [isShowPassword, setIsShowPassword] = useState(true);
 
   const [fontsLoaded] = useFonts({
     RobotoRegular: require("../assets/fonts/Roboto-Regular.ttf"),
@@ -52,7 +50,7 @@ const LoginScreen = ({navigation}) => {
     Keyboard.dismiss();
     console.log(state);
     setIsShowPassword({ boolean: true, text: "Показать" });
-    navigation.navigate("Registration")
+    navigation.navigate("Публикации");
     setState(initialState);
   };
 
@@ -154,7 +152,7 @@ const LoginScreen = ({navigation}) => {
                       placeholderTextColor={"#BDBDBD"}
                       textContentType="password"
                       value={state.password}
-                      secureTextEntry={isShowPassword.boolean}
+                      secureTextEntry={isShowPassword}
                       placeholder="Пароль"
                       onFocus={() => {
                         setIsShowKeyboard(true),
@@ -178,23 +176,24 @@ const LoginScreen = ({navigation}) => {
                     />
                     <Text
                       style={styles.showPass}
-                      onPress={() =>
-                        setIsShowPassword({ boolean: false, text: "" })
-                      }
+                      onPress={() => {
+                        setIsShowPassword((prevState) => !prevState);
+                      }}
                     >
-                      {isShowPassword.text}
+                      {isShowPassword ? "Показать" : "Скрыть"}
                     </Text>
                   </View>
                   <TouchableOpacity
                     style={styles.button}
                     activeOpacity={0.8}
                     onPress={keyboardHide}
-                    // onPress={() => navigation.navigate("Registration")}
-                  
+                    title="Go to Login"
                   >
                     <Text style={styles.buttonText}>Войти</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Registration")}
+                  >
                     <Text style={styles.aside}>
                       Нет аккаунта? Зарегистрироваться
                     </Text>
