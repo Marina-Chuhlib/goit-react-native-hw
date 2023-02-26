@@ -1,3 +1,4 @@
+// import React from "react";
 import React, { useState, useCallback } from "react";
 import {
   StyleSheet,
@@ -22,7 +23,7 @@ const initialState = {
   password: "",
 };
 
-const LoginScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation,route }) => {
   // console.log(Platform.OS);
   console.log(navigation);
 
@@ -50,7 +51,7 @@ const LoginScreen = ({ navigation }) => {
     Keyboard.dismiss();
     console.log(state);
     setIsShowPassword({ boolean: true, text: "Показать" });
-    navigation.navigate("Публикации");
+   navigation.navigate("Публикации",{ route: true});
     setState(initialState);
   };
 
@@ -59,7 +60,7 @@ const LoginScreen = ({ navigation }) => {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
+    <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss();}}>
       <View style={styles.container}>
         <ImageBackground
           source={require("../assets/image/photo-BG-2x.jpg")}

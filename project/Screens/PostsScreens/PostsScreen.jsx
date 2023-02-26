@@ -15,10 +15,10 @@ import {
 const PostsScreen = () => {
   return (
     <View style={styles.container}>
-      <View style={styles.headerWrapper}>
+      {/* <View style={styles.headerWrapper}>
         <Text style={styles.headerText}>Posts Screen</Text>
       </View>
-      <View style={styles.tabBarWrapper}></View>
+      <View style={styles.tabBarWrapper}></View> */}
     </View>
   );
 };
@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
+ margin:15,
     //   justifyContent: "flex-end",
   },
   headerWrapper: {

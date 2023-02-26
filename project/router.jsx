@@ -2,8 +2,10 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { Button } from "react-native";
+
 import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 import RegistrationScreen from "./Screens/RegistrationScreen";
 import LoginScreen from "./Screens/LoginScreen";
@@ -11,12 +13,11 @@ import PostsScreen from "./Screens/PostsScreens/PostsScreen";
 import CreatePostsScreen from "./Screens/PostsScreens/CreatePostsScreen";
 import ProfileScreen from "./Screens/PostsScreens/ProfileScreen";
 
-import { Image } from "react-native";
-
 const MainStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
 
 const useRoute = (isAuth) => {
+  console.log(isAuth)
   if (!isAuth) {
     return (
       <MainStack.Navigator initialRouteName="Login">
@@ -43,12 +44,16 @@ const useRoute = (isAuth) => {
       screenOptions={{
         tabBarShowLabel: false,
         tabBarShowIcon: true,
-      }}
+        tabBarItemStyle: {
+          height: 83,
 
+        }
+      }}
+   
     >
       <Tabs.Screen
-        name="Публикации"
-        component={PostsScreen}
+        name="Создать публикацию"
+        component={CreatePostsScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => {
             return (
@@ -61,8 +66,37 @@ const useRoute = (isAuth) => {
           },
         }}
       />
-      <Tabs.Screen name="Создать публикацию" component={CreatePostsScreen} />
-      <Tabs.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Tabs.Screen
+        name="Публикации"
+        component={PostsScreen}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => {
+            return <Ionicons name="add" size={24} color={"#FFFFFF"} />;
+          },
+          tabBarIconStyle: {
+            backgroundColor: "#FF6C00",
+            width: 70,
+            height: 40,
+            borderRadius: 50,
+
+          },
+               headerRight: () => (
+           <Feather name="log-out" size={24} color="black" />
+            ),
+
+        }}
+      />
+      <Tabs.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{
+          tabBarIcon: ({ focused, color, size }) => {
+            return (
+             <Feather name="user" size={24} color={focused ? "#FF6C00" : color}/>
+            );
+          },
+        }}
+      />
     </Tabs.Navigator>
   );
 };

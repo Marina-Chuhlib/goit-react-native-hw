@@ -51,7 +51,7 @@ const RegistrationScreen = ({ navigation }) => {
     Keyboard.dismiss();
     console.log(state);
     setIsShowPassword({ boolean: true, text: "Показать" });
-    navigation.navigate("Публикации");
+    navigation.navigate("Публикации",{ route: true});
     setState(initialState);
   };
 
