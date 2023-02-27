@@ -25,7 +25,7 @@ const initialState = {
 
 const LoginScreen = ({ navigation,route }) => {
   // console.log(Platform.OS);
-  console.log(navigation);
+
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
