@@ -1,33 +1,12 @@
-import {
-  StyleSheet,
-  TextInput,
-  View,
-  ImageBackground,
-  Text,
-  TouchableOpacity,
-  Platform,
-  KeyboardAvoidingView,
-  Keyboard,
-  TouchableWithoutFeedback,
-  Image,
-} from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 
-const PostsScreen = ({ route }) => {
-  console.log(route.params)
+const PostsScreen = () => {
   return (
     <View style={styles.container}>
-      <View style={styles.userInfo}>
-        <View style={styles.imgBox}>
-          <Image
-            style={styles.avatar}
-            source={require("../../assets/image/avatar.png")}
-          />
-        </View>
-        <View style={styles.user}>
-          <Text style={styles.name}>Natali Romanova</Text>
-          <Text style={styles.email}>email@example.com</Text>
-        </View>
+      <View style={styles.headerWrapper}>
+        <Text style={styles.headerText}>PostsScreen</Text>
       </View>
+      <View style={styles.tabBarWrapper}></View>
     </View>
   );
 };
@@ -38,28 +17,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    paddingHorizontal: 15,
   },
-  userInfo: {
-    flexDirection: "row",
-    marginTop: 32,
-    height: 60,
+  headerWrapper: {
+    justifyContent: "flex-end",
     alignItems: "center",
-    // borderColor: "red",
-    // borderWidth: 1,
+    height: 88,
+    borderBottomWidth: 1,
+    borderBottomColor: "#BDBDBD",
   },
-  imgBox: {
-    width: 60,
-    height: 60,
-    backgroundColor: "#E8E8E8",
-    marginRight: 8,
+  headerText: {
+    marginBottom: 11,
+    fontSize: 17,
   },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius:16,
-  },
-  user: {
-    //  textAlign:"center",
+  tabBarWrapper: {
+    marginTop: 570,
+    alignItems: "center",
+    height: 88,
+    borderBottomWidth: 1,
+    borderBottomColor: "#BDBDBD",
   },
 });

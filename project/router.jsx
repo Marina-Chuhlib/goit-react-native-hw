@@ -14,13 +14,13 @@ import LoginScreen from "./Screens/LoginScreen";
 import PostsScreen from "./Screens/PostsScreens/PostsScreen";
 import CreatePostsScreen from "./Screens/PostsScreens/CreatePostsScreen";
 import ProfileScreen from "./Screens/PostsScreens/ProfileScreen";
+import Home from './Screens/PostsScreens/Home';
 
 const MainStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
 
 const useRoute = (isAuth) => {
-  console.log(isAuth);
-  const [state, setState]= useState(false)
+  // console.log(isAuth);
 
   if (!isAuth) {
     return (
@@ -35,16 +35,16 @@ const useRoute = (isAuth) => {
           component={LoginScreen}
           options={{ headerShown: false }}
         />
-        <MainStack.Screen
-          name="Публикации"
-          component={PostsScreen}
+        {/* <MainStack.Screen
+          name="Home"
+          component={Home}
           options={{ headerShown: false }}
-        />
+        /> */}
       </MainStack.Navigator>
     );
   }
   return (
-    <Tabs.Navigator
+    <Tabs.Navigator initialRouteName="Home"
       screenOptions={{
         tabBarShowLabel: false,
         tabBarShowIcon: true,
@@ -73,8 +73,8 @@ const useRoute = (isAuth) => {
         }}
       />
       <Tabs.Screen
-        name="Публикации"
-        component={PostsScreen}
+        name="Home"
+        component={Home}
         options={{
           tabBarIcon: ({ focused, color, size }) => {
             return <Ionicons name="add" size={24} color={"#FFFFFF"} />;

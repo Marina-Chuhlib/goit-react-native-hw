@@ -1,5 +1,5 @@
 // import React from "react";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback,useContext } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -13,8 +13,12 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
+
+
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+
+import { isAuthContext } from "../context";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -23,9 +27,8 @@ const initialState = {
   password: "",
 };
 
-const LoginScreen = ({ navigation,route }) => {
+const LoginScreen = ({ navigation }) => {
   // console.log(Platform.OS);
-
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
@@ -34,7 +37,7 @@ const LoginScreen = ({ navigation,route }) => {
     password: false,
   });
   const [isShowPassword, setIsShowPassword] = useState(true);
-
+const [isLogin, setIsLogin ]= useState(false)
   const [fontsLoaded] = useFonts({
     RobotoRegular: require("../assets/fonts/Roboto-Regular.ttf"),
     RobotoMedium: require("../assets/fonts/Roboto-Medium.ttf"),
@@ -46,12 +49,14 @@ const LoginScreen = ({ navigation,route }) => {
     }
   }, [fontsLoaded]);
 
+ const {toggleIsAuth } = useContext(isAuthContext);
+  
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
-    setIsShowPassword({ boolean: true, text: "Показать" });
-   navigation.navigate("Публикации",{ route: true});
+    toggleIsAuth()
+    navigation.navigate("ProfileScreen");
     setState(initialState);
   };
 

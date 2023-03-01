@@ -50,8 +50,8 @@ const RegistrationScreen = ({ navigation }) => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
-    setIsShowPassword({ boolean: true, text: "Показать" });
-    navigation.navigate("Публикации",{ route: true});
+    // setIsShowPassword({ boolean: true, text: "Показать" });
+    navigation.navigate("Home",{ route: true});
     setState(initialState);
   };
 
@@ -232,7 +232,7 @@ const RegistrationScreen = ({ navigation }) => {
                   >
                     <Text style={styles.buttonText}>Зарегистрироваться</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => navigation.navigate("Login")}>
                     <Text style={styles.aside}>Уже есть аккаунт? Войти</Text>
                   </TouchableOpacity>
                 </View>
