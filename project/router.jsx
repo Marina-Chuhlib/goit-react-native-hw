@@ -2,8 +2,6 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { useState,useContext } from "react";
-
 import { Button } from "react-native";
 
 import { Feather } from "@expo/vector-icons";
@@ -16,16 +14,17 @@ import CreatePostsScreen from "./Screens/PostsScreens/CreatePostsScreen";
 import ProfileScreen from "./Screens/PostsScreens/ProfileScreen";
 import Home from './Screens/PostsScreens/Home';
 
-import { isAuthContext } from "./context";
-
 const MainStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
-// const isAuth = useContext(isAuthContext);
-// console.log(isAuth, "rout")
-  
+
+
+// const goBack = ({navigation}) => {
+// navigation.navigate("Login")
+// }
+
 
 const useRoute = (isAuth) => {
-  // console.log(isAuth);
+
   if (!isAuth) {
     return (
       <MainStack.Navigator initialRouteName="Login">
@@ -39,11 +38,6 @@ const useRoute = (isAuth) => {
           component={LoginScreen}
           options={{ headerShown: false }}
         />
-        {/* <MainStack.Screen
-          name="Home"
-          component={Home}
-          options={{ headerShown: false }}
-        /> */}
       </MainStack.Navigator>
     );
   }
@@ -92,8 +86,8 @@ const useRoute = (isAuth) => {
           },
           headerRight: () => (
             <Feather name="log-out" size={24} color="#BDBDBD"
-              onPress={() => alert("This is a button!")}
-              // onPress={() => navigation.navigate("Registration")}
+              // onPress={() => alert("This is a button!")}
+              // onPress={() =>}
             />
           ),
 

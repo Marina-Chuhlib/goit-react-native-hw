@@ -1,4 +1,3 @@
-// import React from "react";
 import React, { useState, useCallback, useContext } from "react";
 import {
   StyleSheet,
@@ -16,8 +15,7 @@ import {
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
-import { isAuthContext } from "../context";
-
+import { isAuthContext } from "../App";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,7 +26,6 @@ const initialState = {
 
 const LoginScreen = ({ navigation }) => {
   // console.log(Platform.OS);
-
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
@@ -42,21 +39,20 @@ const LoginScreen = ({ navigation }) => {
     RobotoMedium: require("../assets/fonts/Roboto-Medium.ttf"),
   });
 
+  const { toggleIsAuth } = useContext(isAuthContext);
+
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
 
-  const { toggleIsAuth,isAuth } = useContext(isAuthContext);
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
     toggleIsAuth();
-    console.log(isAuth,"Login");
-    console.log(toggleIsAuth, "toggleIsAuth");
     navigation.navigate("Home");
     setState(initialState);
   };

@@ -13,7 +13,7 @@ import {
 } from "react-native";
 
 const Home = ({ route }) => {
-  console.log(route.params)
+  // console.log(route.params)
   return (
     <View style={styles.container}>
       <View style={styles.userInfo}>
