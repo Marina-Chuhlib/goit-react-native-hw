@@ -2,7 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { useState } from "react";
+import { useState,useContext } from "react";
 
 import { Button } from "react-native";
 
@@ -16,12 +16,16 @@ import CreatePostsScreen from "./Screens/PostsScreens/CreatePostsScreen";
 import ProfileScreen from "./Screens/PostsScreens/ProfileScreen";
 import Home from './Screens/PostsScreens/Home';
 
+import { isAuthContext } from "./context";
+
 const MainStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
+// const isAuth = useContext(isAuthContext);
+// console.log(isAuth, "rout")
+  
 
 const useRoute = (isAuth) => {
   // console.log(isAuth);
-
   if (!isAuth) {
     return (
       <MainStack.Navigator initialRouteName="Login">

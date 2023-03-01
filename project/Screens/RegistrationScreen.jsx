@@ -50,8 +50,8 @@ const RegistrationScreen = ({ navigation }) => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
-    // setIsShowPassword({ boolean: true, text: "Показать" });
-    navigation.navigate("Home",{ route: true});
+    toggleIsAuth();
+    navigation.navigate("Home");
     setState(initialState);
   };
 
@@ -221,8 +221,7 @@ const RegistrationScreen = ({ navigation }) => {
                         setIsShowPassword((prevState) => !prevState);
                       }}
                     >
-                     
-                {isShowPassword ? "Показать" : "Скрыть"}
+                      {isShowPassword ? "Показать" : "Скрыть"}
                     </Text>
                   </View>
                   <TouchableOpacity
@@ -232,7 +231,9 @@ const RegistrationScreen = ({ navigation }) => {
                   >
                     <Text style={styles.buttonText}>Зарегистрироваться</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate("Login")}
+                  >
                     <Text style={styles.aside}>Уже есть аккаунт? Войти</Text>
                   </TouchableOpacity>
                 </View>

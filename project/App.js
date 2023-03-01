@@ -9,14 +9,14 @@ import { IsAuthContext } from "./context";
 import { isAuthContext } from "./context";
 
 export default function App() {
-  const isAuth = useContext(isAuthContext);
-  console.log(isAuth);
-
+  const { isAuth } = useContext(isAuthContext);
   const routing = useRoute(isAuth);
+  console.log(isAuth, "isAuth");
+
   return (
     <>
-      <StatusBar style="auto" />
       <IsAuthContext>
+        <StatusBar style="auto" />
         <NavigationContainer>{routing}</NavigationContainer>
       </IsAuthContext>
     </>

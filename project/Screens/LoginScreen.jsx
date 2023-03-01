@@ -1,5 +1,5 @@
 // import React from "react";
-import React, { useState, useCallback,useContext } from "react";
+import React, { useState, useCallback, useContext } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -13,12 +13,11 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-
-
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
 import { isAuthContext } from "../context";
+
 
 SplashScreen.preventAutoHideAsync();
 
@@ -30,6 +29,7 @@ const initialState = {
 const LoginScreen = ({ navigation }) => {
   // console.log(Platform.OS);
 
+
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [isFocusInput, setIsFocusInput] = useState({
@@ -37,7 +37,6 @@ const LoginScreen = ({ navigation }) => {
     password: false,
   });
   const [isShowPassword, setIsShowPassword] = useState(true);
-const [isLogin, setIsLogin ]= useState(false)
   const [fontsLoaded] = useFonts({
     RobotoRegular: require("../assets/fonts/Roboto-Regular.ttf"),
     RobotoMedium: require("../assets/fonts/Roboto-Medium.ttf"),
@@ -49,14 +48,16 @@ const [isLogin, setIsLogin ]= useState(false)
     }
   }, [fontsLoaded]);
 
- const {toggleIsAuth } = useContext(isAuthContext);
-  
+  const { toggleIsAuth,isAuth } = useContext(isAuthContext);
+
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
     console.log(state);
-    toggleIsAuth()
-    navigation.navigate("ProfileScreen");
+    toggleIsAuth();
+    console.log(isAuth,"Login");
+    console.log(toggleIsAuth, "toggleIsAuth");
+    navigation.navigate("Home");
     setState(initialState);
   };
 
@@ -65,7 +66,11 @@ const [isLogin, setIsLogin ]= useState(false)
   }
 
   return (
-    <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss();}}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
       <View style={styles.container}>
         <ImageBackground
           source={require("../assets/image/photo-BG-2x.jpg")}
