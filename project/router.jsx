@@ -2,7 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
-import { Button } from "react-native";
+import { TouchableOpacity } from "react-native";
 
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -12,19 +12,13 @@ import LoginScreen from "./Screens/LoginScreen";
 import PostsScreen from "./Screens/PostsScreens/PostsScreen";
 import CreatePostsScreen from "./Screens/PostsScreens/CreatePostsScreen";
 import ProfileScreen from "./Screens/PostsScreens/ProfileScreen";
-import Home from './Screens/PostsScreens/Home';
+import Home from "./Screens/PostsScreens/Home";
 
 const MainStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
 
 
-// const goBack = ({navigation}) => {
-// navigation.navigate("Login")
-// }
-
-
 const useRoute = (isAuth) => {
-
   if (!isAuth) {
     return (
       <MainStack.Navigator initialRouteName="Login">
@@ -42,7 +36,8 @@ const useRoute = (isAuth) => {
     );
   }
   return (
-    <Tabs.Navigator initialRouteName="Home"
+    <Tabs.Navigator
+      initialRouteName="Публикации"
       screenOptions={{
         tabBarShowLabel: false,
         tabBarShowIcon: true,
@@ -70,8 +65,9 @@ const useRoute = (isAuth) => {
           },
         }}
       />
+
       <Tabs.Screen
-        name="Home"
+        name="Публикации"
         component={Home}
         options={{
           tabBarIcon: ({ focused, color, size }) => {
@@ -84,11 +80,13 @@ const useRoute = (isAuth) => {
             borderRadius: 50,
             marginTop: 9,
           },
+
           headerRight: () => (
-            <Feather name="log-out" size={24} color="#BDBDBD"
-              // onPress={() => alert("This is a button!")}
-              // onPress={() =>}
-            />
+            <TouchableOpacity
+              // onPress={() => navigation.navigate("Login")}
+            >
+              <Feather name="log-out" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
           ),
 
           headerStyle: {
@@ -121,3 +119,4 @@ const useRoute = (isAuth) => {
 };
 
 export default useRoute;
+

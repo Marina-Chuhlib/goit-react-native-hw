@@ -10,10 +10,11 @@ export const isAuthContext = createContext(false);
 
 export default function App() {
   const [isAuth, setIsAuth] = useState(false);
+  console.log(isAuth, "context");
 
   const toggleIsAuth = () => {
-    // setIsAuth(true);
-    setIsAuth((prevAuth) => (prevAuth === false ? true : false));
+    setIsAuth(true);
+    // setIsAuth((prevAuth) => (prevAuth === false ? true : false));
   };
 
   const routing = useRoute(isAuth);

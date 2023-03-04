@@ -11,14 +11,12 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-
-const ProfileScreen = () => {
+const ProfileScreen = ({ route }) => {
   return (
-    <View style={styles.container}>
-      <View style={styles.headerWrapper}>
-        <Text style={styles.headerText}>Profile Screen</Text>
-      </View>
-      <View style={styles.tabBarWrapper}></View>
+
+    <View>
+      <Text style={styles.headerText}></Text>
+      {/* <Text>{route.name}</Text> */}
     </View>
   );
 };
@@ -42,8 +40,8 @@ const styles = StyleSheet.create({
     marginBottom: 11,
     fontSize: 17,
   },
-    tabBarWrapper: {
-    marginTop:570,
+  tabBarWrapper: {
+    marginTop: 570,
     alignItems: "center",
     height: 88,
     borderBottomWidth: 1,

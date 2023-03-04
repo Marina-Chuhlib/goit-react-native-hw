@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -10,10 +11,21 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Image,
+  FlatList,
 } from "react-native";
 
 const Home = ({ route }) => {
-  // console.log(route.params)
+  // console.log(route.params,"route.params")
+
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    if (route.params) {
+      setPosts((prevPosts) => [...prevPosts, route.params]);
+    }
+  }, [route.params]);
+  // console.log(posts,"posts")
+
   return (
     <View style={styles.container}>
       <View style={styles.userInfo}>
@@ -28,6 +40,15 @@ const Home = ({ route }) => {
           <Text style={styles.email}>email@example.com</Text>
         </View>
       </View>
+      <FlatList
+        data={posts}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <View>
+            <Image source={{uri:item.photo}} style={styles.avatar}/>
+          </View>
+        )}
+      />
     </View>
   );
 };
@@ -57,7 +78,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 60,
     height: 60,
-    borderRadius:16,
+    borderRadius: 16,
   },
   user: {
     //  textAlign:"center",

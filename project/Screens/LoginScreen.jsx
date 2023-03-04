@@ -26,6 +26,7 @@ const initialState = {
 
 const LoginScreen = ({ navigation }) => {
   // console.log(Platform.OS);
+  console.log(navigation,"navigation");
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
@@ -53,7 +54,7 @@ const LoginScreen = ({ navigation }) => {
     Keyboard.dismiss();
     console.log(state);
     toggleIsAuth();
-    navigation.navigate("Home");
+    navigation.navigate("Публикации");
     setState(initialState);
   };
 
