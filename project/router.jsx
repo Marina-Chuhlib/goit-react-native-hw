@@ -7,16 +7,23 @@ import { TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
-import RegistrationScreen from "./Screens/RegistrationScreen";
-import LoginScreen from "./Screens/LoginScreen";
-import PostsScreen from "./Screens/PostsScreens/PostsScreen";
-import CreatePostsScreen from "./Screens/PostsScreens/CreatePostsScreen";
-import ProfileScreen from "./Screens/PostsScreens/ProfileScreen";
-import Home from "./Screens/PostsScreens/Home";
+import RegistrationScreen from "./Screens/auth/RegistrationScreen";
+import LoginScreen from "./Screens/auth/LoginScreen";
+import Home from "./Screens/mainScreen/Home";
+import CreatePostsScreen from "./Screens/mainScreen/CreatePostsScreen";
+import ProfileScreen from "./Screens/mainScreen/ProfileScreen";
+
+
+// import RegistrationScreen from "./Screens/auth/RegistrationScreen";
+// import LoginScreen from "./Screens/LoginScreen";
+// import PostsScreen from "./Screens/PostsScreens/PostsScreen";
+// import CreatePostsScreen from "./Screens/PostsScreens/CreatePostsScreen";
+// import ProfileScreen from "./Screens/PostsScreens/ProfileScreen";
+// import Home from "./Screens/PostsScreens/Home";
+// import MapScreen from "./Screens/nestedScreens/MapScreen";
 
 const MainStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
-
 
 const useRoute = (isAuth) => {
   if (!isAuth) {
@@ -83,7 +90,7 @@ const useRoute = (isAuth) => {
 
           headerRight: () => (
             <TouchableOpacity
-              // onPress={() => navigation.navigate("Login")}
+            // onPress={() => navigation.navigate("Login")}
             >
               <Feather name="log-out" size={24} color="#BDBDBD" />
             </TouchableOpacity>
@@ -119,4 +126,3 @@ const useRoute = (isAuth) => {
 };
 
 export default useRoute;
-

@@ -13,12 +13,16 @@ import {
   Keyboard,
 } from "react-native";
 
+import { useDispatch } from "react-redux";
+
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
+import { authSignUpUser } from "../../redux/auth/authOperations";
+
 const initialState = {
   username: "",
-  emailAddress: "",
+  email: "",
   password: "",
 };
 
@@ -31,14 +35,16 @@ const RegistrationScreen = ({ navigation }) => {
   const [state, setState] = useState(initialState);
   const [isFocusInput, setIsFocusInput] = useState({
     username: false,
-    emailAddress: false,
+    email: false,
     password: false,
   });
   const [isShowPassword, setIsShowPassword] = useState(true);
   const [fontsLoaded] = useFonts({
-    RobotoRegular: require("../assets/fonts/Roboto-Regular.ttf"),
-    RobotoMedium: require("../assets/fonts/Roboto-Medium.ttf"),
+    RobotoRegular: require("../../assets/fonts/Roboto-Regular.ttf"),
+    RobotoMedium: require("../../assets/fonts/Roboto-Medium.ttf"),
   });
+
+  const dispatch = useDispatch();
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -46,11 +52,13 @@ const RegistrationScreen = ({ navigation }) => {
     }
   }, [fontsLoaded]);
 
-  const keyboardHide = () => {
+  const handleSubmit = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
-    console.log(state);
-    toggleIsAuth();
+
+    dispatch(authSignUpUser(state));
+    // console.log(state, "state");
+
     navigation.navigate("Home");
     setState(initialState);
   };
@@ -59,10 +67,10 @@ const RegistrationScreen = ({ navigation }) => {
     return null;
   }
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
+    <TouchableWithoutFeedback onPress={handleSubmit}>
       <View style={styles.container}>
         <ImageBackground
-          source={require("../assets/image/photo-BG-2x.jpg")}
+          source={require("../../assets/image/photo-BG-2x.jpg")}
           style={styles.image}
         >
           <KeyboardAvoidingView
@@ -75,7 +83,7 @@ const RegistrationScreen = ({ navigation }) => {
 
                   ...Platform.select({
                     ios: {
-                      marginTop: isShowKeyboard ? 350 : 219,
+                      marginTop: isShowKeyboard ? 200 : 219,
                     },
                     android: {
                       marginTop: isShowKeyboard ? -100 : 0,
@@ -90,7 +98,7 @@ const RegistrationScreen = ({ navigation }) => {
                 /> */}
                   <Image
                     style={styles.icon}
-                    source={require("../assets/image/add.png")}
+                    source={require("../../assets/image/add.png")}
                     // source={require("../assets/image/del-avatar.icon.png")}
                   />
                 </View>
@@ -143,36 +151,34 @@ const RegistrationScreen = ({ navigation }) => {
                     <TextInput
                       style={{
                         ...styles.input,
-                        borderColor: isFocusInput.emailAddress
-                          ? "#FF6C00"
-                          : "#F6F6F6",
-                        backgroundColor: isFocusInput.emailAddress
+                        borderColor: isFocusInput.email ? "#FF6C00" : "#F6F6F6",
+                        backgroundColor: isFocusInput.email
                           ? "#FFFFFF"
                           : "#F6F6F6",
                       }}
                       textAlign={"left"}
                       placeholderTextColor={"#BDBDBD"}
                       keyboardType="email-address"
-                      textContentType="emailAddress"
-                      value={state.emailAddress}
+                      textContentType="email"
+                      value={state.email}
                       placeholder="Адрес электронной почты"
                       onFocus={() => {
                         setIsShowKeyboard(true),
                           setIsFocusInput({
                             ...isFocusInput,
-                            emailAddress: true,
+                            email: true,
                           });
                       }}
                       onBlur={() => {
                         setIsFocusInput({
                           ...isFocusInput,
-                          emailAddress: false,
+                          email: false,
                         });
                       }}
                       onChangeText={(value) =>
                         setState((prevState) => ({
                           ...prevState,
-                          emailAddress: value,
+                          email: value,
                         }))
                       }
                     />
@@ -227,7 +233,7 @@ const RegistrationScreen = ({ navigation }) => {
                   <TouchableOpacity
                     style={styles.button}
                     activeOpacity={0.8}
-                    onPress={keyboardHide}
+                    onPress={handleSubmit}
                   >
                     <Text style={styles.buttonText}>Зарегистрироваться</Text>
                   </TouchableOpacity>

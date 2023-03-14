@@ -1,22 +1,15 @@
 import { useState, useEffect } from "react";
 import {
   StyleSheet,
-  TextInput,
   View,
-  ImageBackground,
   Text,
-  TouchableOpacity,
-  Platform,
-  KeyboardAvoidingView,
-  Keyboard,
-  TouchableWithoutFeedback,
   Image,
   FlatList,
 } from "react-native";
 
-const Home = ({ route }) => {
-  // console.log(route.params,"route.params")
 
+const DefaultScreenPosts = ({ route ,navigation}) => {
+  // console.log(route.params,"route.params")
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -44,16 +37,19 @@ const Home = ({ route }) => {
         data={posts}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <View>
-            <Image source={{uri:item.photo}} style={styles.avatar}/>
+          <View >
+            <Image source={{uri:item.photo}} style={styles.post}/>
           </View>
         )}
       />
+
+
+
     </View>
   );
 };
 
-export default Home;
+export default DefaultScreenPosts;
 
 const styles = StyleSheet.create({
   container: {
@@ -83,4 +79,10 @@ const styles = StyleSheet.create({
   user: {
     //  textAlign:"center",
   },
+  post: {
+  marginTop:32,
+    height: 240,
+    width:370,
+    borderRadius: 8,
+  }
 });

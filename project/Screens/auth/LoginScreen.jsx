@@ -15,29 +15,29 @@ import {
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
-import { isAuthContext } from "../App";
+import { isAuthContext } from "../../App";
 
 SplashScreen.preventAutoHideAsync();
 
 const initialState = {
-  emailAddress: "",
+  email: "",
   password: "",
 };
 
 const LoginScreen = ({ navigation }) => {
   // console.log(Platform.OS);
-  console.log(navigation,"navigation");
+  // console.log(navigation,"navigation");
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [isFocusInput, setIsFocusInput] = useState({
-    emailAddress: false,
+    email: false,
     password: false,
   });
   const [isShowPassword, setIsShowPassword] = useState(true);
   const [fontsLoaded] = useFonts({
-    RobotoRegular: require("../assets/fonts/Roboto-Regular.ttf"),
-    RobotoMedium: require("../assets/fonts/Roboto-Medium.ttf"),
+    RobotoRegular: require("../../assets/fonts/Roboto-Regular.ttf"),
+    RobotoMedium: require("../../assets/fonts/Roboto-Medium.ttf"),
   });
 
   const { toggleIsAuth } = useContext(isAuthContext);
@@ -52,7 +52,7 @@ const LoginScreen = ({ navigation }) => {
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
-    console.log(state);
+    console.log(state, "state LOGIN");
     toggleIsAuth();
     navigation.navigate("Публикации");
     setState(initialState);
@@ -70,7 +70,7 @@ const LoginScreen = ({ navigation }) => {
     >
       <View style={styles.container}>
         <ImageBackground
-          source={require("../assets/image/photo-BG-2x.jpg")}
+          source={require("../../assets/image/photo-BG-2x.jpg")}
           style={styles.image}
         >
           <KeyboardAvoidingView
@@ -110,36 +110,36 @@ const LoginScreen = ({ navigation }) => {
                     <TextInput
                       style={{
                         ...styles.input,
-                        borderColor: isFocusInput.emailAddress
+                        borderColor: isFocusInput.email
                           ? "#FF6C00"
                           : "#F6F6F6",
-                        backgroundColor: isFocusInput.emailAddress
+                        backgroundColor: isFocusInput.email
                           ? "#FFFFFF"
                           : "#F6F6F6",
                       }}
                       textAlign={"left"}
                       placeholderTextColor={"#BDBDBD"}
                       keyboardType="email-address"
-                      textContentType="emailAddress"
-                      value={state.emailAddress}
+                      textContentType="email"
+                      value={state.email}
                       placeholder="Адрес электронной почты"
                       onFocus={() => {
                         setIsShowKeyboard(true),
                           setIsFocusInput({
                             ...isFocusInput,
-                            emailAddress: true,
+                            email: true,
                           });
                       }}
                       onBlur={() => {
                         setIsFocusInput({
                           ...isFocusInput,
-                          emailAddress: false,
+                          email: false,
                         });
                       }}
                       onChangeText={(value) =>
                         setState((prevState) => ({
                           ...prevState,
-                          emailAddress: value,
+                          email: value,
                         }))
                       }
                     />

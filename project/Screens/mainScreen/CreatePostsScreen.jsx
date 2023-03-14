@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { Camera } from "expo-camera";
+import * as Location from "expo-location";
+
+import { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -8,25 +11,39 @@ import {
   Image,
 } from "react-native";
 
-import { Camera } from "expo-camera";
-
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
 const CreatePostsScreen = ({ navigation }) => {
   const [cameraRef, setCameraRef] = useState(null);
   const [photo, setPhoto] = useState("");
+  const [location, setLocation] = useState(null);
 
   const takePhoto = async () => {
     const photo = await cameraRef.takePictureAsync();
     setPhoto(photo.uri);
-    console.log(photo.uri);
+    let location = await Location.getCurrentPositionAsync({});
+    const coords = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    };
+    setLocation(coords);
+    console.log(coords);
   };
 
   const sendPhoto = () => {
-    navigation.navigate("Публикации",{photo})
-    console.log(navigation);
+    navigation.navigate("DefaultScreen", { photo });
+    // console.log(navigation);
   };
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+      }
+    })();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -65,9 +82,11 @@ const CreatePostsScreen = ({ navigation }) => {
           placeholderTextColor={"#BDBDBD"}
           placeholder="Местность..."
           style={styles.input}
-        >
+        ></TextInput>
+        <TouchableOpacity onPress={() => navigation.navigate("MapScreen")}>
+          <Text>Map</Text>
           <Ionicons name="location-outline" size={24} color="#BDBDBD" />
-        </TextInput>
+        </TouchableOpacity>
       </View>
       <View style={styles.tabBarWrapper}></View>
       {photo ? (
@@ -185,12 +204,4 @@ const styles = StyleSheet.create({
   buttonTextActive: {
     color: "#fff",
   },
-
-  //   tabBarWrapper: {
-  //     marginTop: 570,
-  //     alignItems: "center",
-  //     height: 88,
-  //     borderBottomWidth: 1,
-  //     borderBottomColor: "#BDBDBD",
-  //   },
 });
