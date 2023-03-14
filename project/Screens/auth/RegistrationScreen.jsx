@@ -57,9 +57,9 @@ const RegistrationScreen = ({ navigation }) => {
     Keyboard.dismiss();
 
     dispatch(authSignUpUser(state));
-    // console.log(state, "state");
+    console.log(state, "state");
 
-    navigation.navigate("Home");
+    navigation.navigate("Login");
     setState(initialState);
   };
 
