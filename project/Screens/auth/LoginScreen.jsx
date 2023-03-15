@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from "react";
+import React, { useState, useCallback, useContext,useEffect } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -12,10 +12,13 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
+import { useDispatch } from "react-redux";
+
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
 import { isAuthContext } from "../../App";
+import { authSignInUser } from "../../redux/auth/authOperations";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,7 +43,8 @@ const LoginScreen = ({ navigation }) => {
     RobotoMedium: require("../../assets/fonts/Roboto-Medium.ttf"),
   });
 
-  const { toggleIsAuth } = useContext(isAuthContext);
+  const dispatch = useDispatch();
+
 
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
@@ -48,13 +52,19 @@ const LoginScreen = ({ navigation }) => {
     }
   }, [fontsLoaded]);
 
+  // const keyboardHide = () => {
+  //   setIsShowKeyboard(false);
+  //   Keyboard.dismiss();
+    
+  //   toggleIsAuth();
 
-  const keyboardHide = () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-    console.log(state, "state LOGIN");
-    toggleIsAuth();
-    navigation.navigate("Публикации");
+  //   setState(initialState);
+  // };
+
+  const handleSubmit = () => {
+    dispatch(authSignInUser(state));
+
+    navigation.navigate("Home");
     setState(initialState);
   };
 
@@ -110,9 +120,7 @@ const LoginScreen = ({ navigation }) => {
                     <TextInput
                       style={{
                         ...styles.input,
-                        borderColor: isFocusInput.email
-                          ? "#FF6C00"
-                          : "#F6F6F6",
+                        borderColor: isFocusInput.email ? "#FF6C00" : "#F6F6F6",
                         backgroundColor: isFocusInput.email
                           ? "#FFFFFF"
                           : "#F6F6F6",
@@ -194,8 +202,7 @@ const LoginScreen = ({ navigation }) => {
                   <TouchableOpacity
                     style={styles.button}
                     activeOpacity={0.8}
-                    onPress={keyboardHide}
-                    title="Go to Login"
+                    onPress={handleSubmit}
                   >
                     <Text style={styles.buttonText}>Войти</Text>
                   </TouchableOpacity>

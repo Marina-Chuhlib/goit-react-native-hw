@@ -3,24 +3,33 @@ import { Provider } from "react-redux";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 
-import { createContext } from "react";
 import { useState } from "react";
 
 import useRoute from "./router";
 import { store } from "./redux/store";
 
-export const isAuthContext = createContext(false);
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import db from "./firebase/config";
+
+const auth = getAuth(db);
 
 export default function App() {
-  // const [isAuth, setIsAuth] = useState(false);
-  // console.log(isAuth, "context");
+  const [user, setUser] = useState(null);
 
-  // const toggleIsAuth = () => {
-  //   setIsAuth(true);
-  //   // setIsAuth((prevAuth) => (prevAuth === false ? true : false));
-  // };
+  const authStateChanged = async () => {
+    try {
+      onAuthStateChanged(auth, (user) => {
+        setUser(user);
+        // console.log(user, "APP ");
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
 
-  const routing = useRoute(false);
+  authStateChanged();
+
+  const routing = useRoute(user);
 
   return (
     <>

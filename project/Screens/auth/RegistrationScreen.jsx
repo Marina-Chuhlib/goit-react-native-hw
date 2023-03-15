@@ -21,7 +21,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { authSignUpUser } from "../../redux/auth/authOperations";
 
 const initialState = {
-  username: "",
+  userName: "",
   email: "",
   password: "",
 };
@@ -34,7 +34,7 @@ const RegistrationScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [isFocusInput, setIsFocusInput] = useState({
-    username: false,
+    userName: false,
     email: false,
     password: false,
   });
@@ -57,7 +57,6 @@ const RegistrationScreen = ({ navigation }) => {
     Keyboard.dismiss();
 
     dispatch(authSignUpUser(state));
-    console.log(state, "state");
 
     navigation.navigate("Login");
     setState(initialState);
@@ -110,39 +109,39 @@ const RegistrationScreen = ({ navigation }) => {
                     paddingBottom: isShowKeyboard ? 32 : 45,
                   }}
                 >
-                  <View style={styles.inputUserName}>
+                  <View style={styles.inputuserName}>
                     <TextInput
                       style={{
                         ...styles.input,
-                        borderColor: isFocusInput.username
+                        borderColor: isFocusInput.userName
                           ? "#FF6C00"
                           : "#F6F6F6",
-                        backgroundColor: isFocusInput.username
+                        backgroundColor: isFocusInput.userName
                           ? "#FFFFFF"
                           : "#F6F6F6",
                       }}
                       textAlign={"left"}
                       placeholderTextColor={"#BDBDBD"}
-                      textContentType="username"
-                      value={state.username}
+                      textContentType="userName"
+                      value={state.userName}
                       placeholder="Логин"
                       onFocus={() => {
                         setIsShowKeyboard(true),
                           setIsFocusInput({
                             ...isFocusInput,
-                            username: true,
+                            userName: true,
                           });
                       }}
                       onBlur={() => {
                         setIsFocusInput({
                           ...isFocusInput,
-                          username: false,
+                          userName: false,
                         });
                       }}
                       onChangeText={(value) =>
                         setState((prevState) => ({
                           ...prevState,
-                          username: value,
+                          userName: value,
                         }))
                       }
                     />
@@ -311,7 +310,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 8,
   },
-  inputUserName: {
+  inputuserName: {
     marginTop: 32,
   },
   inputMail: {

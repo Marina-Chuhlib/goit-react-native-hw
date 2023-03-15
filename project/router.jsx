@@ -14,21 +14,13 @@ import CreatePostsScreen from "./Screens/mainScreen/CreatePostsScreen";
 import ProfileScreen from "./Screens/mainScreen/ProfileScreen";
 
 
-// import RegistrationScreen from "./Screens/auth/RegistrationScreen";
-// import LoginScreen from "./Screens/LoginScreen";
-// import PostsScreen from "./Screens/PostsScreens/PostsScreen";
-// import CreatePostsScreen from "./Screens/PostsScreens/CreatePostsScreen";
-// import ProfileScreen from "./Screens/PostsScreens/ProfileScreen";
-// import Home from "./Screens/PostsScreens/Home";
-// import MapScreen from "./Screens/nestedScreens/MapScreen";
-
 const MainStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
 
 const useRoute = (isAuth) => {
   if (!isAuth) {
     return (
-      <MainStack.Navigator initialRouteName="Login">
+      <MainStack.Navigator initialRouteName="Registration">
         <MainStack.Screen
           name="Registration"
           component={RegistrationScreen}
@@ -74,7 +66,7 @@ const useRoute = (isAuth) => {
       />
 
       <Tabs.Screen
-        name="Публикации"
+        name="Home"
         component={Home}
         options={{
           tabBarIcon: ({ focused, color, size }) => {

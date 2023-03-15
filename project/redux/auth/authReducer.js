@@ -4,7 +4,18 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: {
     userId: null,
-    nickname: null,
+    userName: null,
+    stateChange: null,
   },
-  reducers: {},
+  reducers: {
+    updateUserProfile: (state, { payload }) => ({
+      ...state,
+      userId: payload.userId,
+      userName: payload.userName,
+    }),
+    authStateChange: (state, { payload }) => ({
+      ...state,
+      stateChange: payload.stateChange,
+    }),
+  },
 });
