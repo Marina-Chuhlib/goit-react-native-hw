@@ -58,7 +58,7 @@ const RegistrationScreen = ({ navigation }) => {
 
     dispatch(authSignUpUser(state));
 
-    navigation.navigate("Login");
+    navigation.navigate("Home");
     setState(initialState);
   };
 

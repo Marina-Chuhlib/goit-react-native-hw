@@ -7,6 +7,8 @@ import {
   FlatList,
 } from "react-native";
 
+import bd from "../../firebase/config"
+
 
 const DefaultScreenPosts = ({ route ,navigation}) => {
   // console.log(route.params,"route.params")

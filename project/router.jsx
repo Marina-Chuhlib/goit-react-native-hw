@@ -13,7 +13,6 @@ import Home from "./Screens/mainScreen/Home";
 import CreatePostsScreen from "./Screens/mainScreen/CreatePostsScreen";
 import ProfileScreen from "./Screens/mainScreen/ProfileScreen";
 
-
 const MainStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
 
@@ -36,7 +35,7 @@ const useRoute = (isAuth) => {
   }
   return (
     <Tabs.Navigator
-      initialRouteName="Публикации"
+      initialRouteName="Home"
       screenOptions={{
         tabBarShowLabel: false,
         tabBarShowIcon: true,
