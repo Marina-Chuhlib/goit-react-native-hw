@@ -16,7 +16,7 @@ const auth = getAuth(db);
 
 export const authSignUpUser =
   ({ email, password, userName }) =>
-  async (dispatch, getSatte) => {
+  async (dispatch, getState) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
 
@@ -41,20 +41,19 @@ export const authSignUpUser =
 
 export const authSignInUser =
   ({ email, password }) =>
-  async (dispatch, getSatte) => {
+  async (dispatch, getState) => {
     try {
       const user = await signInWithEmailAndPassword(auth, email, password);
-      console.log("user SignInUser", user);
+      // console.log("user SignInUser", user);
     } catch (error) {
       console.log("error", error);
       console.log("error.message", error.message);
     }
   };
 
-export const authStateCahngeUser = () => async (dispatch, getSatte) => {
+export const authStateCahngeUser = () => async (dispatch, getState) => {
   try {
     await onAuthStateChanged(auth, (user) => {
-      // setUser(user);
       if (user) {
         const userUpdateProfile = {
           userName: user.displayName,
@@ -71,7 +70,6 @@ export const authStateCahngeUser = () => async (dispatch, getSatte) => {
 };
 
 export const authSignOutUser = () => async (dispatch, getState) => {
-  // await db.auth().signOut(auth);
   await signOut(auth);
   dispatch(authSignOut());
 };

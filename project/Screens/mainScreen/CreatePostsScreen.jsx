@@ -14,6 +14,11 @@ import {
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
+import db from "../../firebase/config";
+import { getStorage, ref,uploadBytes } from "firebase/storage";
+
+const storage = getStorage(db);
+
 const CreatePostsScreen = ({ navigation }) => {
   const [cameraRef, setCameraRef] = useState(null);
   const [photo, setPhoto] = useState("");
@@ -28,12 +33,25 @@ const CreatePostsScreen = ({ navigation }) => {
       longitude: location.coords.longitude,
     };
     setLocation(coords);
-    console.log(coords);
+    // console.log(coords);
+  };
+
+  const uploadPhotoToServer = async () => {
+    const response = await fetch(photo);
+
+    const file = await response.blob();
+
+    const uniquePostId = Date.now().toString();
+    const storageRef = ref(storage, `postImage/${uniquePostId}`);
+
+    const data = await uploadBytes(storageRef, file);
+    // console.log("data", data);
   };
 
   const sendPhoto = () => {
+    uploadPhotoToServer();
+    console.log("SEND");
     navigation.navigate("DefaultScreen", { photo });
-    // console.log(navigation);
   };
 
   useEffect(() => {
