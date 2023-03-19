@@ -13,10 +13,18 @@ import Home from "./Screens/mainScreen/Home";
 import CreatePostsScreen from "./Screens/mainScreen/CreatePostsScreen";
 import ProfileScreen from "./Screens/mainScreen/ProfileScreen";
 
+import { authSignOutUser } from "./redux/auth/authOperations";
+import { useDispatch } from "react-redux";
+
 const MainStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
 
 const useRoute = (isAuth) => {
+  const dispatch = useDispatch();
+
+    const signOut = () => {
+    dispatch(authSignOutUser());
+  };
   if (!isAuth) {
     return (
       <MainStack.Navigator initialRouteName="Registration">
@@ -81,7 +89,7 @@ const useRoute = (isAuth) => {
 
           headerRight: () => (
             <TouchableOpacity
-            // onPress={() => navigation.navigate("Login")}
+            onPress={signOut}
             >
               <Feather name="log-out" size={24} color="#BDBDBD" />
             </TouchableOpacity>
