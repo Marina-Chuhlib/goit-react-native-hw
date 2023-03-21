@@ -1,23 +1,32 @@
 import { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  FlatList,
-} from "react-native";
+import { StyleSheet, View, Text, Image, FlatList } from "react-native";
 
+import app from "../../firebase/config";
+// import { doc, onSnapshot } from "firebase/firestore";
+import { getDocs, collection } from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 
-const DefaultScreenPosts = ({ route ,navigation}) => {
-  // console.log(route.params,"route.params")
+const db = getFirestore(app);
+
+const DefaultScreenPosts = ({ route, navigation }) => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    if (route.params) {
-      setPosts((prevPosts) => [...prevPosts, route.params]);
-    }
-  }, [route.params]);
-  // console.log(posts,"posts")
+    getAllPost();
+    console.log("useEffect");
+  }, []);
+
+  const getAllPost = async () => {
+    const querySnapshot = await getDocs(collection(db, "posts"));
+
+    querySnapshot.forEach((doc) => {
+      console.log(doc.data(), "data");
+
+      setPosts({ ...doc.data(), id: doc.id });
+    });
+
+    console.log(posts, "POSTS");
+  };
 
   return (
     <View style={styles.container}>
@@ -29,7 +38,7 @@ const DefaultScreenPosts = ({ route ,navigation}) => {
           />
         </View>
         <View style={styles.user}>
-          <Text style={styles.name}>Natali Romanova</Text>
+          <Text style={styles.name}>{posts.userName}</Text>
           <Text style={styles.email}>email@example.com</Text>
         </View>
       </View>
@@ -37,14 +46,11 @@ const DefaultScreenPosts = ({ route ,navigation}) => {
         data={posts}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <View >
-            <Image source={{uri:item.photo}} style={styles.post}/>
+          <View>
+            <Image source={{ uri: item.photo }} style={styles.post} />
           </View>
         )}
       />
-
-
-
     </View>
   );
 };
@@ -80,9 +86,9 @@ const styles = StyleSheet.create({
     //  textAlign:"center",
   },
   post: {
-  marginTop:32,
+    marginTop: 32,
     height: 240,
-    width:370,
+    width: 370,
     borderRadius: 8,
-  }
+  },
 });

@@ -54,9 +54,6 @@ const CreatePostsScreen = ({ navigation }) => {
       longitude: location.coords.longitude,
     };
     setLocation(coords);
-    console.log(coords, "coords");
-    // console.log(location, "location");
-    // console.log(comment, "comment");
   };
 
   const uploadPhotoToServer = async () => {
@@ -68,7 +65,6 @@ const CreatePostsScreen = ({ navigation }) => {
     const storageRef = ref(storage, `postImage/${uniquePostId}`);
 
     const data = await uploadBytes(storageRef, file);
-    // console.log("data", data);
 
     const getStorageRef = await getDownloadURL(storageRef);
     // console.log(getStorageRef);
@@ -78,27 +74,27 @@ const CreatePostsScreen = ({ navigation }) => {
 
   const uploadPostToServer = async () => {
     const photo = await uploadPhotoToServer();
-    // const createPost = await db
-    //   .firestore()
-    //   .collection("posts")
-    //   .add({ photo, comment, location: location.coords, userId, userName });
 
     const docRef = await addDoc(collection(cloudDB, "posts"), {
-      photo, comment, location, userId, userName 
+      photo,
+      comment,
+      location,
+      userId,
+      userName,
     });
-    // console.log("Document written with ID: ", docRef.id);
 
-//     const docRef = await addDoc(collection(cloudDB, "cities"), {
-//   name: "Hello",
-//   country: "Japan"
-// });
-// console.log("Document written with ID: ", docRef.id)
+    // const docRef2 = await addDoc(collection(cloudDB, "cities"), {
+    //   name: "Tokyo",
+    //   country: "Japan",
+    // });
+  
   };
 
   const sendPhoto = () => {
     // uploadPhotoToServer();
     uploadPostToServer();
-    navigation.navigate("DefaultScreen", { photo });
+    // navigation.navigate("DefaultScreen", { photo });
+    navigation.navigate("DefaultScreen");
   };
 
   return (
