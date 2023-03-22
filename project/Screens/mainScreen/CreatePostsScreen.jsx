@@ -75,19 +75,13 @@ const CreatePostsScreen = ({ navigation }) => {
   const uploadPostToServer = async () => {
     const photo = await uploadPhotoToServer();
 
-    const docRef = await addDoc(collection(cloudDB, "posts"), {
+   await addDoc(collection(cloudDB, "posts"), {
       photo,
       comment,
       location,
       userId,
       userName,
     });
-
-    // const docRef2 = await addDoc(collection(cloudDB, "cities"), {
-    //   name: "Tokyo",
-    //   country: "Japan",
-    // });
-  
   };
 
   const sendPhoto = () => {

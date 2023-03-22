@@ -1,5 +1,16 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, View, Text, Image, FlatList } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
+
+import { useSelector } from "react-redux";
+
+import { Ionicons } from "@expo/vector-icons";
 
 import app from "../../firebase/config";
 import { getDocs, collection } from "firebase/firestore";
@@ -9,6 +20,8 @@ const db = getFirestore(app);
 
 const DefaultScreenPosts = ({ route, navigation }) => {
   const [posts, setPosts] = useState([]);
+
+  const { userName } = useSelector((state) => state.auth);
 
   useEffect(() => {
     getAllPost();
@@ -21,7 +34,7 @@ const DefaultScreenPosts = ({ route, navigation }) => {
       // console.log(doc.data(), "data");
 
       setPosts((prevPosts) => [...prevPosts, { ...doc.data(), id: doc.id }]);
-      //   console.log(posts, "POSTS")
+      console.log(posts, "POSTS");
     });
   };
 
@@ -35,8 +48,8 @@ const DefaultScreenPosts = ({ route, navigation }) => {
           />
         </View>
         <View style={styles.user}>
-          <Text style={styles.name}>{posts}</Text>
-          <Text style={styles.email}>email@example.com</Text>
+          <Text style={styles.name}>{userName}</Text>
+          <Text style={styles.email}>{}</Text>
         </View>
       </View>
       <FlatList
@@ -45,6 +58,26 @@ const DefaultScreenPosts = ({ route, navigation }) => {
         renderItem={({ item }) => (
           <View>
             <Image source={{ uri: item.photo }} style={styles.post} />
+
+            <View>
+              <Text>{item.comment}</Text>
+            </View>
+            <View>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("MapScreen", { location: item.location })
+                }
+              >
+                <Ionicons name="location-outline" size={24} color="#BDBDBD" />
+              </TouchableOpacity>
+            </View>
+            <View>
+              <TouchableOpacity onPress={() =>
+                  navigation.navigate("CommentsScreen", { postId: item.id })
+                }>
+                <Text>Comment</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       />

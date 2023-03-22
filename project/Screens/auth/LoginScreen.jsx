@@ -51,15 +51,7 @@ const LoginScreen = ({ navigation }) => {
       await SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
-
-  // const keyboardHide = () => {
-  //   setIsShowKeyboard(false);
-  //   Keyboard.dismiss();
-    
-  //   toggleIsAuth();
-
-  //   setState(initialState);
-  // };
+  
 
   const handleSubmit = () => {
     dispatch(authSignInUser(state));
