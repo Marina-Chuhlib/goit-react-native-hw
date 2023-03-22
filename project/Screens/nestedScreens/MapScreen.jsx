@@ -1,4 +1,5 @@
 import MapView, { Marker } from "react-native-maps";
+import { useEffect } from "react";
 
 import {
   StyleSheet,
@@ -6,9 +7,14 @@ import {
   Dimensions,
 } from "react-native";
 
-const MapScreen = ({ route }) => {
+const MapScreen = ({ route, navigation }) => {
   // console.log("route.params.location", route.params.location);
   const { longitude, latitude } = route.params.location;
+
+  useEffect(() => {
+     navigation.setOptions({ tabBarStyle: { display: 'none' }})
+  }, []);
+
 
   return (
     <View style={styles.container}>

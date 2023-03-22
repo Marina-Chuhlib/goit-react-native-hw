@@ -6,7 +6,7 @@ import {
   TextInput,
 } from "react-native";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import app from "../../firebase/config";
@@ -15,14 +15,19 @@ import { doc, collection, addDoc } from "firebase/firestore";
 
 const db = getFirestore(app);
 
-const CommentsScreen = ({ route }) => {
+const CommentsScreen = ({ route, navigation }) => {
   const { postId } = route.params;
   const [comment, setComment] = useState("");
 
   const { userName } = useSelector((state) => state.auth);
 
+//   useEffect(() => {
+//     navigation.setOptions({ tabBarStyle: { display: "none" } });
+//   }, []);
+
   const createPost = async () => {
     const docRef = await doc(db, "posts", postId);
+
     await addDoc(collection(docRef, "comments"), {
       comment,
       userName,

@@ -2,7 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import DefaultScreenPosts from "../nestedScreens/DefaultScreenPosts";
-import MapScreen from '../nestedScreens/MapScreen';
+import MapScreen from "../nestedScreens/MapScreen";
 import CommentsScreen from "../nestedScreens/CommentsScreen";
 
 const NestedScreen = createStackNavigator();
@@ -15,13 +15,12 @@ const Home = () => {
         component={DefaultScreenPosts}
         options={{ headerShown: false }}
       />
+      <NestedScreen.Screen name="MapScreen" component={MapScreen} />
       <NestedScreen.Screen
-        name="MapScreen"
-        component={MapScreen}
-      />
-           <NestedScreen.Screen
         name="CommentsScreen"
         component={CommentsScreen}
+        // screenOptions={{ tabBarStyle: { display: "none" } }}
+        // options={{ headerShown: false }}
       />
     </NestedScreen.Navigator>
   );

@@ -43,6 +43,8 @@ const CreatePostsScreen = ({ navigation }) => {
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
     })();
+
+     navigation.setOptions({ tabBarStyle: { display: 'none' }})
   }, []);
 
   const takePhoto = async () => {
@@ -153,7 +155,16 @@ const CreatePostsScreen = ({ navigation }) => {
           <Text style={styles.buttonText}>Опубликовать</Text>
         </TouchableOpacity>
       )}
+
+          <TouchableOpacity
+          style={styles.buttonActive}
+          activeOpacity={0.8}
+          onPress={sendPhoto}
+        >
+          <Text style={styles.buttonTextActive}>DELETE</Text>
+        </TouchableOpacity>
     </View>
+  
   );
 };
 
