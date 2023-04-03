@@ -120,7 +120,7 @@ const useRoute = (isAuth) => {
           // },
 
           headerLeft: () => (
-            <TouchableOpacity >
+            <TouchableOpacity>
               <Ionicons name="arrow-back" size={24} color="#212121" />
             </TouchableOpacity>
           ),
@@ -135,7 +135,7 @@ const useRoute = (isAuth) => {
         }}
       />
       <Tabs.Screen
-        name="ProfileScreen"
+        name="Публикации"
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => {
@@ -147,7 +147,19 @@ const useRoute = (isAuth) => {
               />
             );
           },
+
+          headerRight: () => (
+            <TouchableOpacity onPress={signOut}>
+              <Feather name="log-out" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+          ),
         }}
+
+        // headerRight: () => (
+        //   <TouchableOpacity onPress={signOut}>
+        //     <Feather name="log-out" size={24} color="#BDBDBD" />
+        //   </TouchableOpacity>
+        // ),
       />
     </Tabs.Navigator>
   );

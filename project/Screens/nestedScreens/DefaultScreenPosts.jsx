@@ -10,18 +10,21 @@ import {
 
 import { useSelector } from "react-redux";
 
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons,EvilIcons } from "@expo/vector-icons";
 
 import app from "../../firebase/config";
-import { getFirestore, getDocs, collection } from "firebase/firestore";
-// import { getFirestore } from "firebase/firestore";
+import {
+  getFirestore,
+  getDocs,
+  collection,
+  onSnapshot,
+} from "firebase/firestore";
 
 const db = getFirestore(app);
 
-const DefaultScreenPosts = ({ route, navigation }) => {
+const DefaultScreenPosts = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
-
-  const { userName } = useSelector((state) => state.auth);
+  const { userName, userEmail } = useSelector((state) => state.auth);
 
   useEffect(() => {
     getAllPost();
@@ -29,15 +32,17 @@ const DefaultScreenPosts = ({ route, navigation }) => {
 
   const getAllPost = async () => {
     try {
-      const querySnapshot = await getDocs(collection(db, "posts"));
-
-      await querySnapshot.forEach((doc) => {
-        // console.log(doc.data(), "data");
-
-        setPosts((prevPosts) => [...prevPosts, { ...doc.data(), id: doc.id }]);
+      await onSnapshot(collection(db, "posts"), (snapshots) => {
+        setPosts(snapshots.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       });
+      // const querySnapshot = await getDocs(collection(db, "posts"));
+
+      // await querySnapshot.forEach((doc) => {
+      //   setPosts((prevPosts) => [...prevPosts, { ...doc.data(), id: doc.id }]);
+      // });
     } catch (error) {
       console.log(error.massage);
+      Alert.alert("try again");
     }
   };
 
@@ -52,9 +57,10 @@ const DefaultScreenPosts = ({ route, navigation }) => {
         </View>
         <View style={styles.user}>
           <Text style={styles.name}>{userName}</Text>
-          <Text style={styles.email}>{}</Text>
+          <Text style={styles.email}>{userEmail}</Text>
         </View>
       </View>
+      {/* {posts.length===0 && <Text style={styles.name}>Создать публикацию</Text>} */}
       <FlatList
         data={posts}
         keyExtractor={(item, index) => index.toString()}
@@ -77,10 +83,12 @@ const DefaultScreenPosts = ({ route, navigation }) => {
             <View>
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate("CommentsScreen", { postId: item.id })
+                  navigation.navigate("Комментарии", { postId: item.id })
+                  
                 }
+        
               >
-                <Text>Comment</Text>
+              <EvilIcons name="comment" size={24} color="black" />
               </TouchableOpacity>
             </View>
           </View>

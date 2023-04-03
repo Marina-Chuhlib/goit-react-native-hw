@@ -55,10 +55,12 @@ export const authSignInUser =
 export const authStateCahngeUser = () => async (dispatch, getState) => {
   try {
     await onAuthStateChanged(auth, (user) => {
+      // console.log(user);
       if (user) {
         const userUpdateProfile = {
           userName: user.displayName,
           userId: user.uid,
+          userEmail: user.email,
         };
 
         dispatch(authStateChange({ stateChange: true }));

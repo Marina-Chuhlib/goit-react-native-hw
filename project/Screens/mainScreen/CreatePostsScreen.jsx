@@ -32,6 +32,7 @@ const CreatePostsScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState("");
   const [comment, setComment] = useState("");
   const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   const { userId, userName } = useSelector((state) => state.auth);
 
@@ -49,14 +50,19 @@ const CreatePostsScreen = ({ navigation }) => {
   }, []);
 
   const takePhoto = async () => {
-    const photo = await cameraRef.takePictureAsync();
-    setPhoto(photo.uri);
-    let location = await Location.getCurrentPositionAsync({});
-    const coords = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    };
-    setLocation(coords);
+    try {
+      const photo = await cameraRef.takePictureAsync();
+      setPhoto(photo.uri);
+      let location = await Location.getCurrentPositionAsync({});
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+
+      setLocation(coords);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const uploadPhotoToServer = async () => {
@@ -76,27 +82,39 @@ const CreatePostsScreen = ({ navigation }) => {
   };
 
   const uploadPostToServer = async () => {
-    const photo = await uploadPhotoToServer();
+    try {
+      const photo = await uploadPhotoToServer();
 
-    await addDoc(collection(cloudDB, "posts"), {
-      photo,
-      comment,
-      location,
-      userId,
-      userName,
-    });
+      await addDoc(collection(cloudDB, "posts"), {
+        photo,
+        comment,
+        location,
+        userId,
+        userName,
+      });
+    } catch (error) {
+      console.log(error.massage);
+    }
   };
 
   const sendPhoto = () => {
-    // uploadPhotoToServer();
     uploadPostToServer();
-    // navigation.navigate("DefaultScreen", { photo });
+    setComment("");
+    setPhoto("");
     navigation.navigate("DefaultScreen");
   };
 
   const deletePhoto = () => {
     setPhoto("");
+    setComment("");
   };
+
+  let text = "Waiting..";
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+  }
 
   return (
     <>
@@ -116,36 +134,34 @@ const CreatePostsScreen = ({ navigation }) => {
                 source={{ uri: photo }}
                 style={{ height: 100, width: 100 }}
               />
-              {/* <Image
-              source={require("../../assets/image/photo.jpg")}
-              style={styles.previewPhoto}
-            /> */}
             </View>
           )}
           <TouchableOpacity style={styles.icon} onPress={takePhoto}>
             <FontAwesome name="camera" size={20} color="#BDBDBD" />
           </TouchableOpacity>
         </Camera>
-
-        {/* <TouchableOpacity style={styles.icon}>
-          <FontAwesome name="camera" size={20} color="#BDBDBD" />
-        </TouchableOpacity> */}
-        {/* </View> */}
         <Text style={styles.text}>Загрузите фото</Text>
         <View>
           <TextInput
             placeholderTextColor={"#BDBDBD"}
             placeholder="Название..."
             style={styles.input}
-            onChangeText={setComment}
+            value={comment}
+            onChangeText={(value) => setComment(value)}
           ></TextInput>
 
           <TextInput
             placeholderTextColor={"#BDBDBD"}
             placeholder="Местность..."
             style={styles.input}
-          ></TextInput>
-          <TouchableOpacity onPress={() => navigation.navigate("MapScreen")}>
+          >
+         {photo &&    <Text>{text}</Text>}
+          </TextInput>
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate("MapScreen", { location: location.coords })
+            }
+          >
             <Text>Map</Text>
             <Ionicons name="location-outline" size={24} color="#BDBDBD" />
           </TouchableOpacity>

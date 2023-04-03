@@ -17,7 +17,7 @@ const Home = () => {
       />
       <NestedScreen.Screen name="MapScreen" component={MapScreen} />
       <NestedScreen.Screen
-        name="CommentsScreen"
+        name="Комментарии"
         component={CommentsScreen}
         // screenOptions={{ tabBarStyle: { display: "none" } }}
         // options={{ headerShown: false }}

@@ -18,6 +18,7 @@ import {
   collection,
   addDoc,
   getDocs,
+  onSnapshot,
 } from "firebase/firestore";
 
 const db = getFirestore(app);
@@ -30,41 +31,52 @@ const CommentsScreen = ({ route, navigation }) => {
   const { userName } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    navigation.setOptions({ tabBarStyle: { display: "none" } });
+    // navigation.setOptions({ tabBarStyle: { display: "none" } });
+    // NavigationBar.getVisibilityAsync("hidden");
     getAllPosts();
   }, []);
 
   const createPost = async () => {
+    if (!comment.trim()) {
+      Alert.alert("The comment can not be empty ");
+      return;
+    }
     const docRef = await doc(db, "posts", postId);
-  
 
-
-
-    await addDoc(collection(docRef, "comments"),
-      {
+    await addDoc(collection(docRef, "comments"), {
       comment,
       userName,
       postDate: new Date(),
     });
-
-    navigation.navigate("DefaultScreen");
+    setComment("");
   };
 
   const getAllPosts = async () => {
-    const docRef = await doc(db, "posts", postId);
-    const querySnapshot = await getDocs(collection(docRef, "comments"));
+    try {
+      const docRef = await doc(db, "posts", postId);
+      onSnapshot(collection(docRef, "comments"), (data) =>
+        setAllComments(
+          data.docs.map((doc) => ({
+            ...doc.data(),
+          }))
+        )
+      );
+    } catch (error) {
+      console.log(error);
+    }
 
-    await querySnapshot.forEach((doc) => {
-      // console.log(doc.data(), "data");
-      // console.log(doc.post.date, "time")
-      setAllComments((prevAllComment) => [
-        ...prevAllComment,
-        { ...doc.data(), id: doc.id },
-      ]);
-    });
+    // const docRef = await doc(db, "posts", postId);
+    // const querySnapshot = await getDocs(collection(docRef, "comments"));
+
+    // await querySnapshot.forEach((doc) => {
+    //   // console.log(doc.data(), "data");
+    //   // console.log(doc.post.date, "time")
+    //   setAllComments((prevAllComment) => [
+    //     ...prevAllComment,
+    //     { ...doc.data(), id: doc.id },
+    //   ]);
+    // });
   };
-
-
 
   return (
     <View style={styles.container}>
@@ -84,9 +96,10 @@ const CommentsScreen = ({ route, navigation }) => {
 
       <TextInput
         placeholderTextColor={"#BDBDBD"}
-        placeholder="Название..."
+        placeholder="Комментировать..."
         style={styles.input}
-        onChangeText={setComment}
+        value={comment}
+        onChangeText={(value) => setComment(value)}
       ></TextInput>
       <TouchableOpacity
         style={styles.button}
@@ -131,12 +144,26 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#BDBDBD",
   },
+  // input: {
+  //   marginTop: 32,
+  //   borderBottomWidth: 1,
+  //   // marginHorizontal: 20,
+  //   borderBottomColor: "#E8E8E8",
+  //   paddingBottom: 8,
+
+  // },
   input: {
-    marginTop: 32,
-    borderBottomWidth: 1,
-    // marginHorizontal: 20,
-    borderBottomColor: "#E8E8E8",
-    paddingBottom: 8,
+    marginHorizontal: 16,
+    padding: 16,
+    border: "1px solid #E8E8E8",
+    height: 50,
+    fontFamily: "Roboto-Regular",
+    color: "#212121",
+    fontSize: 16,
+    lineHeight: 19,
+    backgroundColor: "#F6F6F6",
+    boxSizing: "border-box",
+    borderRadius: 100,
   },
   button: {
     marginHorizontal: 25,
