@@ -1,6 +1,7 @@
-import React from "react";
+import * as React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { getHeaderTitle } from "@react-navigation/elements";
 
 import { TouchableOpacity } from "react-native";
 
@@ -22,9 +23,10 @@ const Tabs = createBottomTabNavigator();
 const useRoute = (isAuth) => {
   const dispatch = useDispatch();
 
-    const signOut = () => {
+  const signOut = () => {
     dispatch(authSignOutUser());
   };
+
   if (!isAuth) {
     return (
       <MainStack.Navigator initialRouteName="Registration">
@@ -54,9 +56,11 @@ const useRoute = (isAuth) => {
       }}
     >
       <Tabs.Screen
-        name="Создать публикацию"
-        component={CreatePostsScreen}
+        name="Home"
+        component={Home}
         options={{
+          title: "Публикации",
+
           tabBarIcon: ({ focused, color, size }) => {
             return (
               <Feather
@@ -69,12 +73,26 @@ const useRoute = (isAuth) => {
           tabBarIconStyle: {
             marginTop: 9,
           },
+
+          headerRight: () => (
+            <TouchableOpacity onPress={signOut}>
+              <Feather name="log-out" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+          ),
+
+          headerStyle: {
+            borderBottomColor: "#E5E5E5",
+            borderBottomWidth: 1,
+          },
+          headerRightContainerStyle: {
+            paddingRight: 15,
+          },
         }}
       />
 
       <Tabs.Screen
-        name="Home"
-        component={Home}
+        name="Создать публикацию"
+        component={CreatePostsScreen}
         options={{
           tabBarIcon: ({ focused, color, size }) => {
             return <Ionicons name="add" size={24} color={"#FFFFFF"} />;
@@ -87,11 +105,23 @@ const useRoute = (isAuth) => {
             marginTop: 9,
           },
 
-          headerRight: () => (
-            <TouchableOpacity
-            onPress={signOut}
-            >
-              <Feather name="log-out" size={24} color="#BDBDBD" />
+          // headerRight: () => (
+          //   <TouchableOpacity onPress={signOut}>
+          //     <Feather name="log-out" size={24} color="#BDBDBD" />
+          //   </TouchableOpacity>
+          // ),
+
+          // headerStyle: {
+          //   borderBottomColor: "#E5E5E5",
+          //   borderBottomWidth: 1,
+          // },
+          // headerRightContainerStyle: {
+          //   paddingRight: 15,
+          // },
+
+          headerLeft: () => (
+            <TouchableOpacity >
+              <Ionicons name="arrow-back" size={24} color="#212121" />
             </TouchableOpacity>
           ),
 
@@ -99,8 +129,8 @@ const useRoute = (isAuth) => {
             borderBottomColor: "#E5E5E5",
             borderBottomWidth: 1,
           },
-          headerRightContainerStyle: {
-            paddingRight: 15,
+          headerLeftContainerStyle: {
+            paddingLeft: 15,
           },
         }}
       />
@@ -117,7 +147,6 @@ const useRoute = (isAuth) => {
               />
             );
           },
-          tabBarIconStyle: {},
         }}
       />
     </Tabs.Navigator>

@@ -1,22 +1,57 @@
 import {
   StyleSheet,
-  TextInput,
   View,
-  ImageBackground,
-  Text,
-  TouchableOpacity,
-  Platform,
-  KeyboardAvoidingView,
-  Keyboard,
-  TouchableWithoutFeedback,
+  FlatList,
+  Image
 } from "react-native";
 
-const ProfileScreen = ({ route }) => {
-  return (
+import { useEffect, useState } from "react";
 
-    <View>
-      <Text style={styles.headerText}></Text>
-      {/* <Text>{route.name}</Text> */}
+import { useSelector } from "react-redux";
+
+import app from "../../firebase/config";
+import {
+  getFirestore,
+  collection,
+  where,
+  getDocs,
+} from "firebase/firestore";
+
+const db = getFirestore(app);
+
+const ProfileScreen = () => {
+  const [userPosts, setUserPosts] = useState([]);
+  const { userId } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    getUserPosts();
+  }, []);
+
+  const getUserPosts = async () => {
+    const citiesRef = await collection(db, "posts");
+
+    const querySnapshot = await getDocs(
+      citiesRef,
+      where("userId", "==", "userId")
+    );
+
+    await querySnapshot.forEach((doc) => {
+
+      setUserPosts((prevUserPosts) => [...prevUserPosts, { ...doc.data() }]);
+    });
+  };
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={userPosts}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => (
+          <View>
+      <Image source={{ uri: item.photo }} style={styles.post} />
+          </View>
+        )}
+      />
     </View>
   );
 };
@@ -27,7 +62,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    //   justifyContent: "flex-end",
+paddingHorizontal:16,
   },
   headerWrapper: {
     justifyContent: "flex-end",
@@ -46,5 +81,11 @@ const styles = StyleSheet.create({
     height: 88,
     borderBottomWidth: 1,
     borderBottomColor: "#BDBDBD",
+  },
+    post: {
+    marginTop: 32,
+    height: 240,
+    width: 370,
+    borderRadius: 8,
   },
 });

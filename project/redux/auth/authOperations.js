@@ -10,6 +10,7 @@ import {
 } from "firebase/auth";
 
 import { authSlice } from "./authReducer";
+
 const { authSignOut, authStateChange, updateUserProfile } = authSlice.actions;
 
 const auth = getAuth(db);

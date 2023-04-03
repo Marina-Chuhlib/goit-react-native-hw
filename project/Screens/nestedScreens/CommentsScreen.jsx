@@ -4,38 +4,84 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  SafeAreaView,
+  FlatList,
 } from "react-native";
 
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import app from "../../firebase/config";
-import { getFirestore } from "firebase/firestore";
-import { doc, collection, addDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  collection,
+  addDoc,
+  getDocs,
+} from "firebase/firestore";
 
 const db = getFirestore(app);
 
 const CommentsScreen = ({ route, navigation }) => {
   const { postId } = route.params;
   const [comment, setComment] = useState("");
+  const [allComments, setAllComments] = useState([]);
 
   const { userName } = useSelector((state) => state.auth);
 
-//   useEffect(() => {
-//     navigation.setOptions({ tabBarStyle: { display: "none" } });
-//   }, []);
+  useEffect(() => {
+    navigation.setOptions({ tabBarStyle: { display: "none" } });
+    getAllPosts();
+  }, []);
 
   const createPost = async () => {
     const docRef = await doc(db, "posts", postId);
+  
 
-    await addDoc(collection(docRef, "comments"), {
+
+
+    await addDoc(collection(docRef, "comments"),
+      {
       comment,
       userName,
+      postDate: new Date(),
+    });
+
+    navigation.navigate("DefaultScreen");
+  };
+
+  const getAllPosts = async () => {
+    const docRef = await doc(db, "posts", postId);
+    const querySnapshot = await getDocs(collection(docRef, "comments"));
+
+    await querySnapshot.forEach((doc) => {
+      // console.log(doc.data(), "data");
+      // console.log(doc.post.date, "time")
+      setAllComments((prevAllComment) => [
+        ...prevAllComment,
+        { ...doc.data(), id: doc.id },
+      ]);
     });
   };
 
+
+
   return (
     <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
+        <FlatList
+          data={allComments}
+          renderItem={({ item }) => (
+            <View style={styles.commentContainer}>
+              <Text>{item.userName}</Text>
+              <Text>{item.comment}</Text>
+              {/* <Text>{item.postDate}</Text> */}
+            </View>
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      </SafeAreaView>
+
       <TextInput
         placeholderTextColor={"#BDBDBD"}
         placeholder="Название..."
@@ -59,7 +105,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    justifyContent: "flex-end",
+    // justifyContent: "flex-end",
+  },
+  commentContainer: {
+    backgroundColor: "rgba(0, 0, 0, 0.03)",
+    marginHorizontal: 10,
+    padding: 10,
+    marginBottom: 10,
   },
   headerWrapper: {
     justifyContent: "flex-end",

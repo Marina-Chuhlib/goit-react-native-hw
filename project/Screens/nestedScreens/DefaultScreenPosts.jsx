@@ -13,8 +13,8 @@ import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 
 import app from "../../firebase/config";
-import { getDocs, collection } from "firebase/firestore";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, getDocs, collection } from "firebase/firestore";
+// import { getFirestore } from "firebase/firestore";
 
 const db = getFirestore(app);
 
@@ -28,14 +28,17 @@ const DefaultScreenPosts = ({ route, navigation }) => {
   }, []);
 
   const getAllPost = async () => {
-    const querySnapshot = await getDocs(collection(db, "posts"));
+    try {
+      const querySnapshot = await getDocs(collection(db, "posts"));
 
-    await querySnapshot.forEach((doc) => {
-      // console.log(doc.data(), "data");
+      await querySnapshot.forEach((doc) => {
+        // console.log(doc.data(), "data");
 
-      setPosts((prevPosts) => [...prevPosts, { ...doc.data(), id: doc.id }]);
-      console.log(posts, "POSTS");
-    });
+        setPosts((prevPosts) => [...prevPosts, { ...doc.data(), id: doc.id }]);
+      });
+    } catch (error) {
+      console.log(error.massage);
+    }
   };
 
   return (
@@ -72,9 +75,11 @@ const DefaultScreenPosts = ({ route, navigation }) => {
               </TouchableOpacity>
             </View>
             <View>
-              <TouchableOpacity onPress={() =>
+              <TouchableOpacity
+                onPress={() =>
                   navigation.navigate("CommentsScreen", { postId: item.id })
-                }>
+                }
+              >
                 <Text>Comment</Text>
               </TouchableOpacity>
             </View>

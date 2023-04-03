@@ -13,8 +13,9 @@ import {
   Image,
 } from "react-native";
 
-import { FontAwesome } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons, Feather } from "@expo/vector-icons";
+
+import { getHeaderTitle } from "@react-navigation/elements";
 
 import db from "../../firebase/config";
 import app from "../../firebase/config";
@@ -44,7 +45,7 @@ const CreatePostsScreen = ({ navigation }) => {
       setLocation(location);
     })();
 
-     navigation.setOptions({ tabBarStyle: { display: 'none' }})
+    navigation.setOptions({ tabBarStyle: { display: "none" } });
   }, []);
 
   const takePhoto = async () => {
@@ -77,7 +78,7 @@ const CreatePostsScreen = ({ navigation }) => {
   const uploadPostToServer = async () => {
     const photo = await uploadPhotoToServer();
 
-   await addDoc(collection(cloudDB, "posts"), {
+    await addDoc(collection(cloudDB, "posts"), {
       photo,
       comment,
       location,
@@ -93,78 +94,90 @@ const CreatePostsScreen = ({ navigation }) => {
     navigation.navigate("DefaultScreen");
   };
 
+  const deletePhoto = () => {
+    setPhoto("");
+  };
+
   return (
-    <View style={styles.container}>
-      {/* <View style={styles.fotoBox}> */}
-      <Camera style={styles.camera} ref={setCameraRef}>
-        {photo && (
-          <View style={styles.previewPhotoContainer}>
-            <Image
-              source={{ uri: photo }}
-              style={{ height: 100, width: 100 }}
-            />
-            {/* <Image
+    <>
+      <View style={styles.container}>
+        {/* <TouchableOpacity  style={styles.goBackBtn}
+        onPress={() => navigation.navigate("Home")}
+      >
+        <Ionicons name="arrow-back" size={24} color="#212121" />
+    </TouchableOpacity>
+     */}
+
+        {/* <View style={styles.fotoBox}> */}
+        <Camera style={styles.camera} ref={setCameraRef}>
+          {photo && (
+            <View style={styles.previewPhotoContainer}>
+              <Image
+                source={{ uri: photo }}
+                style={{ height: 100, width: 100 }}
+              />
+              {/* <Image
               source={require("../../assets/image/photo.jpg")}
               style={styles.previewPhoto}
             /> */}
-          </View>
-        )}
-        <TouchableOpacity style={styles.icon} onPress={takePhoto}>
-          <FontAwesome name="camera" size={20} color="#BDBDBD" />
-        </TouchableOpacity>
-      </Camera>
+            </View>
+          )}
+          <TouchableOpacity style={styles.icon} onPress={takePhoto}>
+            <FontAwesome name="camera" size={20} color="#BDBDBD" />
+          </TouchableOpacity>
+        </Camera>
 
-      {/* <TouchableOpacity style={styles.icon}>
+        {/* <TouchableOpacity style={styles.icon}>
           <FontAwesome name="camera" size={20} color="#BDBDBD" />
         </TouchableOpacity> */}
-      {/* </View> */}
-      <Text style={styles.text}>Загрузите фото</Text>
-      <View>
-        <TextInput
-          placeholderTextColor={"#BDBDBD"}
-          placeholder="Название..."
-          style={styles.input}
-          onChangeText={setComment}
-        ></TextInput>
+        {/* </View> */}
+        <Text style={styles.text}>Загрузите фото</Text>
+        <View>
+          <TextInput
+            placeholderTextColor={"#BDBDBD"}
+            placeholder="Название..."
+            style={styles.input}
+            onChangeText={setComment}
+          ></TextInput>
 
-        <TextInput
-          placeholderTextColor={"#BDBDBD"}
-          placeholder="Местность..."
-          style={styles.input}
-        ></TextInput>
-        <TouchableOpacity onPress={() => navigation.navigate("MapScreen")}>
-          <Text>Map</Text>
-          <Ionicons name="location-outline" size={24} color="#BDBDBD" />
+          <TextInput
+            placeholderTextColor={"#BDBDBD"}
+            placeholder="Местность..."
+            style={styles.input}
+          ></TextInput>
+          <TouchableOpacity onPress={() => navigation.navigate("MapScreen")}>
+            <Text>Map</Text>
+            <Ionicons name="location-outline" size={24} color="#BDBDBD" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.tabBarWrapper}></View>
+        {photo ? (
+          <TouchableOpacity
+            style={styles.buttonActive}
+            activeOpacity={0.8}
+            onPress={sendPhoto}
+          >
+            <Text style={styles.buttonTextActive}>Опубликовать</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            style={styles.button}
+            activeOpacity={0.8}
+            onPress={sendPhoto}
+          >
+            <Text style={styles.buttonText}>Опубликовать</Text>
+          </TouchableOpacity>
+        )}
+
+        <TouchableOpacity
+          style={styles.deleteBtn}
+          activeOpacity={0.8}
+          onPress={deletePhoto}
+        >
+          <Feather name="trash-2" size={24} color="#BDBDBD" />
         </TouchableOpacity>
       </View>
-      <View style={styles.tabBarWrapper}></View>
-      {photo ? (
-        <TouchableOpacity
-          style={styles.buttonActive}
-          activeOpacity={0.8}
-          onPress={sendPhoto}
-        >
-          <Text style={styles.buttonTextActive}>Опубликовать</Text>
-        </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          style={styles.button}
-          activeOpacity={0.8}
-          onPress={sendPhoto}
-        >
-          <Text style={styles.buttonText}>Опубликовать</Text>
-        </TouchableOpacity>
-      )}
-
-          <TouchableOpacity
-          style={styles.buttonActive}
-          activeOpacity={0.8}
-          onPress={sendPhoto}
-        >
-          <Text style={styles.buttonTextActive}>DELETE</Text>
-        </TouchableOpacity>
-    </View>
-  
+    </>
   );
 };
 
@@ -176,6 +189,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     // marginHorizontal:16
     paddingHorizontal: 16,
+  },
+  goBackBtn: {
+    position: "absolute",
+    left: 15,
+    top: -15,
+    zIndex: 9,
   },
   camera: {
     // width: 343,
@@ -261,5 +280,16 @@ const styles = StyleSheet.create({
   },
   buttonTextActive: {
     color: "#fff",
+  },
+  deleteBtn: {
+    marginTop: 120,
+    justifyContent: "center",
+    alignItems: "center",
+    marginLeft: "auto",
+    marginRight: "auto",
+    width: 70,
+    height: 40,
+    borderRadius: 100,
+    backgroundColor: "#F6F6F6",
   },
 });
