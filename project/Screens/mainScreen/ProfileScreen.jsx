@@ -5,6 +5,7 @@ import {
   Image,
   Text,
   TouchableOpacity,
+  ImageBackground,
 } from "react-native";
 
 import { useEffect, useState } from "react";
@@ -21,7 +22,6 @@ const db = getFirestore(app);
 const ProfileScreen = ({ navigation }) => {
   const [userPosts, setUserPosts] = useState([]);
   const { userId, userName, userEmail } = useSelector((state) => state.auth);
-
 
   useEffect(() => {
     getUserPosts();
@@ -48,38 +48,46 @@ const ProfileScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.userInfo}>
-        <View style={styles.imgBox}>
-          <Image
-            style={styles.avatar}
-            source={require("../../assets/image/avatar.png")}
-          />
-        </View>
-        <View style={styles.user}>
-          <Text style={styles.name}>{userName}</Text>
-          <Text style={styles.email}>{userEmail}</Text>
-        </View>
-      </View>
-      <FlatList
-        data={userPosts}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <View>
-            <Image source={{ uri: item.photo }} style={styles.post} />
-            <View>
-              <Text>{item.comment}</Text>
+      <ImageBackground
+        source={require("../../assets/image/photo-BG-2x.jpg")}
+        style={styles.image}
+      >
+        <View style={styles.wrapper}>
+          <View style={styles.userInfo}>
+            <View style={styles.imgBox}>
+              <Image
+                style={styles.avatar}
+                source={require("../../assets/image/avatar.png")}
+              />
             </View>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Комментарии", { postId: item.id })
-
-              }
-            >
-              <EvilIcons name="comment" size={24} color="black" />
-            </TouchableOpacity>
+            <View style={styles.user}>
+              <Text style={styles.name}>{userName}</Text>
+              {/* <Text style={styles.email}>{userEmail}</Text> */}
+            </View>
           </View>
-        )}
-      />
+          <View style={styles.postsList}>
+            <FlatList
+              data={userPosts}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View>
+                  <Image source={{ uri: item.photo }} style={styles.post} />
+                  <View>
+                    <Text>{item.comment}</Text>
+                  </View>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("Комментарии", { postId: item.id })
+                    }
+                  >
+                    <EvilIcons name="comment" size={24} color="black" />
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
+          </View>
+        </View>
+      </ImageBackground>
     </View>
   );
 };
@@ -89,53 +97,63 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 16,
-  },
-  headerWrapper: {
-    justifyContent: "flex-end",
-    alignItems: "center",
-    height: 88,
-    borderBottomWidth: 1,
-    borderBottomColor: "#BDBDBD",
-  },
-  headerText: {
-    marginBottom: 11,
-    fontSize: 17,
-  },
-  tabBarWrapper: {
-    marginTop: 570,
-    alignItems: "center",
-    height: 88,
-    borderBottomWidth: 1,
-    borderBottomColor: "#BDBDBD",
-  },
-  userInfo: {
-    flexDirection: "row",
-    marginTop: 32,
-    height: 60,
-    alignItems: "center",
+
     // borderColor: "red",
     // borderWidth: 1,
   },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "flex-end",
+  },
+  wrapper: {
+    marginTop: 250,
+    backgroundColor: "#FFFFFF",
+    paddingHorizontal: 16,
+
+        borderTopRightRadius: 25,
+    borderTopLeftRadius: 25,
+
+  //  borderColor: "red",
+  //   borderWidth: 1,
+  },
+
+  userInfo: {
+    flexDirection: "row",
+    marginTop: 32,
+    height: 100,
+    alignItems: "center",
+    justifyContent: "center",
+
+    // borderColor: "red",
+    // borderWidth: 2,
+  },
   imgBox: {
-    width: 60,
-    height: 60,
+    position: "absolute",
+    left: "35%",
+    top: "-100%",
+    width: 120,
+    height: 120,
     backgroundColor: "#E8E8E8",
     marginRight: 8,
+    borderRadius: 16,
   },
   avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 16,
+    width: "100%",
+    height: "100%",
   },
   user: {
     //  textAlign:"center",
   },
+  name: {
+    fontSize: 30,
+  },
+  postsList: {
+    marginBottom: 170,
+  },
   post: {
-    marginTop: 32,
     height: 240,
-    width: 370,
+    width: '100%',
     borderRadius: 8,
   },
 });

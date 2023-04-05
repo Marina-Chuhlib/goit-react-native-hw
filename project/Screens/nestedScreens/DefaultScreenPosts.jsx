@@ -1,4 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { Alert } from "react-native";
+
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
 import {
   StyleSheet,
   View,
@@ -10,7 +15,7 @@ import {
 
 import { useSelector } from "react-redux";
 
-import { Ionicons,EvilIcons } from "@expo/vector-icons";
+import { Ionicons, Feather } from "@expo/vector-icons";
 
 import app from "../../firebase/config";
 import {
@@ -20,11 +25,25 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 
+SplashScreen.preventAutoHideAsync();
+
 const db = getFirestore(app);
 
 const DefaultScreenPosts = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   const { userName, userEmail } = useSelector((state) => state.auth);
+
+  const [fontsLoaded] = useFonts({
+    RobotoRegular: require("../../assets/fonts/Roboto-Regular.ttf"),
+    RobotoMedium: require("../../assets/fonts/Roboto-Medium.ttf"),
+    RobotoBold: require("../../assets/fonts/Roboto-Bold.ttf"),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
   useEffect(() => {
     getAllPost();
@@ -42,9 +61,13 @@ const DefaultScreenPosts = ({ navigation }) => {
       // });
     } catch (error) {
       console.log(error.massage);
-      Alert.alert("try again");
+      Alert.alert("Try again");
     }
   };
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
@@ -63,33 +86,51 @@ const DefaultScreenPosts = ({ navigation }) => {
       {/* {posts.length===0 && <Text style={styles.name}>Создать публикацию</Text>} */}
       <FlatList
         data={posts}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item, index) => {
+          index.toString();
+          console.log(item.location.longitude);
+        }}
         renderItem={({ item }) => (
           <View>
             <Image source={{ uri: item.photo }} style={styles.post} />
 
             <View>
-              <Text>{item.comment}</Text>
+              <Text style={styles.title}>{item.comment}</Text>
             </View>
-            <View>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("MapScreen", { location: item.location })
-                }
-              >
-                <Ionicons name="location-outline" size={24} color="#BDBDBD" />
-              </TouchableOpacity>
-            </View>
-            <View>
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("Комментарии", { postId: item.id })
-                  
-                }
-        
-              >
-              <EvilIcons name="comment" size={24} color="black" />
-              </TouchableOpacity>
+
+            <View style={styles.box}>
+              <View>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Комментарии", { postId: item.id })
+                  }
+                >
+                  <Feather name="message-circle" size={24} color="#BDBDBD" />
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.wrapperLocation}>
+                <TouchableOpacity
+                  style={styles.location}
+                  onPress={() =>
+                    navigation.navigate("MapScreen", {
+                      location: item.location,
+                    })
+                  }
+                >
+              <Ionicons name="location-outline" size={24} color="#BDBDBD" />
+               
+                  {/* <View style={styles.locationName}>
+                    <Text >
+                    {item.location.longitude}
+                  </Text>
+                  </View> */}
+              
+                </TouchableOpacity>
+                           <Text >
+                    {item.location.longitude}
+                  </Text>
+              </View>
             </View>
           </View>
         )}
@@ -105,12 +146,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 15,
+
+
   },
   userInfo: {
     flexDirection: "row",
     marginTop: 32,
     height: 60,
     alignItems: "center",
+    marginBottom: 32,
+
     // borderColor: "red",
     // borderWidth: 1,
   },
@@ -126,12 +171,64 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   user: {
-    //  textAlign:"center",
+    // borderColor: "red",
+    // borderWidth: 1,
+  },
+  name: {
+    fontFamily: "RobotoBold",
+    fontStyle: "normal",
+    fontSize: 13,
+    lineHeight: 15,
+    color: "#212121",
+  },
+  email: {
+    fontFamily: "RobotoRegular",
+    fontStyle: "normal",
+    fontSize: 11,
+    lineHeight: 13,
+    color: "#212121",
   },
   post: {
-    marginTop: 32,
-    height: 240,
-    width: 370,
+  height: 240,
+    width: '100%',
     borderRadius: 8,
   },
+  box: {
+    display: "flex",
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 32,
+  },
+  title: {
+    marginTop: 8,
+    marginBottom: 8,
+    fontFamily: "RobotoMedium",
+    fontStyle: "normal",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+  },
+  wrapperLocation: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+
+    // borderColor: "red",
+    // borderWidth: 1,
+  },
+  location: {
+    alignItems: "center",
+    marginBottom: 8,
+    fontFamily: "RobotoMedium",
+    fontStyle: "normal",
+    fontSize: 50,
+    lineHeight: 19,
+    color: "#212121",
+    marginLeft: 30,
+  },
+  // locationName: {
+  //     display: "flex",
+  //   flexDirection: "row",
+  // },
 });

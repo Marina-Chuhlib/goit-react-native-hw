@@ -135,9 +135,11 @@ const useRoute = (isAuth) => {
         }}
       />
       <Tabs.Screen
-        name="Публикации"
+        // name="Публикации"
+        name="Профиль"
         component={ProfileScreen}
         options={{
+          // headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
             return (
               <Feather

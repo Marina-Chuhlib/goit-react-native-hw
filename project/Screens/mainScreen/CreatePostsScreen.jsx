@@ -1,8 +1,13 @@
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 
-import { useState, useEffect } from "react";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
+import { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
+
+import { Alert } from "react-native";
 
 import {
   StyleSheet,
@@ -15,13 +20,12 @@ import {
 
 import { FontAwesome, Ionicons, Feather } from "@expo/vector-icons";
 
-import { getHeaderTitle } from "@react-navigation/elements";
-
 import db from "../../firebase/config";
 import app from "../../firebase/config";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { collection, addDoc } from "firebase/firestore";
+
+SplashScreen.preventAutoHideAsync();
 
 const storage = getStorage(db);
 
@@ -33,8 +37,20 @@ const CreatePostsScreen = ({ navigation }) => {
   const [comment, setComment] = useState("");
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [locationName, setLocationName] = useState("");
 
   const { userId, userName } = useSelector((state) => state.auth);
+
+  const [fontsLoaded] = useFonts({
+    RobotoRegular: require("../../assets/fonts/Roboto-Regular.ttf"),
+    RobotoMedium: require("../../assets/fonts/Roboto-Medium.ttf"),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
   useEffect(() => {
     (async () => {
@@ -84,7 +100,6 @@ const CreatePostsScreen = ({ navigation }) => {
   const uploadPostToServer = async () => {
     try {
       const photo = await uploadPhotoToServer();
-
       await addDoc(collection(cloudDB, "posts"), {
         photo,
         comment,
@@ -98,6 +113,10 @@ const CreatePostsScreen = ({ navigation }) => {
   };
 
   const sendPhoto = () => {
+    if (!photo) {
+      Alert.alert("Загрузите фото");
+      return;
+    }
     uploadPostToServer();
     setComment("");
     setPhoto("");
@@ -113,20 +132,19 @@ const CreatePostsScreen = ({ navigation }) => {
   if (errorMsg) {
     text = errorMsg;
   } else if (location) {
-    text = JSON.stringify(location);
+
+    text=JSON.stringify(location)
+
+  }
+
+
+  if (!fontsLoaded) {
+    return null;
   }
 
   return (
     <>
       <View style={styles.container}>
-        {/* <TouchableOpacity  style={styles.goBackBtn}
-        onPress={() => navigation.navigate("Home")}
-      >
-        <Ionicons name="arrow-back" size={24} color="#212121" />
-    </TouchableOpacity>
-     */}
-
-        {/* <View style={styles.fotoBox}> */}
         <Camera style={styles.camera} ref={setCameraRef}>
           {photo && (
             <View style={styles.previewPhotoContainer}>
@@ -140,7 +158,11 @@ const CreatePostsScreen = ({ navigation }) => {
             <FontAwesome name="camera" size={20} color="#BDBDBD" />
           </TouchableOpacity>
         </Camera>
-        <Text style={styles.text}>Загрузите фото</Text>
+        {photo ? (
+          <Text style={styles.text}>Редактировать фото</Text>
+        ) : (
+          <Text style={styles.text}>Загрузите фото</Text>
+        )}
         <View>
           <TextInput
             placeholderTextColor={"#BDBDBD"}
@@ -153,16 +175,18 @@ const CreatePostsScreen = ({ navigation }) => {
           <TextInput
             placeholderTextColor={"#BDBDBD"}
             placeholder="Местность..."
-            style={styles.input}
+            style={styles.inputLocation}
           >
-         {photo &&    <Text>{text}</Text>}
+            {photo && <Text>{text}</Text>}
           </TextInput>
           <TouchableOpacity
+            style={styles.locationBtn}
             onPress={() =>
-              navigation.navigate("MapScreen", { location: location.coords })
+              navigation.navigate("MapScreen", {
+                location: location.coords,
+              })
             }
           >
-            <Text>Map</Text>
             <Ionicons name="location-outline" size={24} color="#BDBDBD" />
           </TouchableOpacity>
         </View>
@@ -203,7 +227,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    // marginHorizontal:16
     paddingHorizontal: 16,
   },
   goBackBtn: {
@@ -213,9 +236,7 @@ const styles = StyleSheet.create({
     zIndex: 9,
   },
   camera: {
-    // width: 343,
     height: 240,
-    // marginHorizontal: 16,
     borderRadius: 8,
     marginTop: 32,
     alignItems: "center",
@@ -236,7 +257,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     width: 343,
     height: 240,
-    // marginHorizontal: 21,
     marginTop: 32,
     alignItems: "center",
     justifyContent: "center",
@@ -244,7 +264,6 @@ const styles = StyleSheet.create({
   icon: {
     width: 60,
     height: 60,
-    // backgroundColor: "#ffff",
     backgroundColor: "rgba(255, 255, 255, 0.3)",
     alignItems: "center",
     justifyContent: "center",
@@ -264,20 +283,53 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   text: {
-    // marginLeft: 20,
+    marginTop: 8,
+    fontFamily: "RobotoRegular",
+    fontStyle: "normal",
+    fontSize: 16,
+    lineHeight: 19,
     color: "#BDBDBD",
+    marginBottom: 32,
   },
   input: {
-    marginTop: 32,
     borderBottomWidth: 1,
-    // marginHorizontal: 20,
+    fontSize: 16,
     borderBottomColor: "#E8E8E8",
-    paddingBottom: 8,
+    paddingTop: 15,
+    paddingBottom: 16,
+    fontFamily: "RobotoMedium",
+    fontStyle: "normal",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+  },
+  inputLocation: {
+    marginTop: 16,
+    borderBottomWidth: 1,
+    fontFamily: "RobotoRegular",
+    fontStyle: "normal",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+    borderBottomColor: "#E8E8E8",
+    paddingTop: 15,
+    paddingBottom: 16,
+    paddingLeft: 26,
+  },
+  locationBtn: {
+    position: "absolute",
+    top: "65%",
+    width: 25,
+    height: 25,
   },
   button: {
-    // marginHorizontal: 16,
     marginTop: 32,
     backgroundColor: "#F6F6F6",
+    fontFamily: "RobotoRegular",
+    fontStyle: "normal",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#FFFFFF",
     height: 61,
     borderRadius: 100,
     justifyContent: "center",

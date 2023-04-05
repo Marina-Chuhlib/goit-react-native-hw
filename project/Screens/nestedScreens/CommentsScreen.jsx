@@ -25,6 +25,7 @@ const db = getFirestore(app);
 
 const CommentsScreen = ({ route, navigation }) => {
   const { postId } = route.params;
+  // console.log(postId)
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
 
@@ -34,6 +35,7 @@ const CommentsScreen = ({ route, navigation }) => {
     // navigation.setOptions({ tabBarStyle: { display: "none" } });
     // NavigationBar.getVisibilityAsync("hidden");
     getAllPosts();
+     
   }, []);
 
   const createPost = async () => {
@@ -59,8 +61,11 @@ const CommentsScreen = ({ route, navigation }) => {
           data.docs.map((doc) => ({
             ...doc.data(),
           }))
+         
         )
       );
+
+     
     } catch (error) {
       console.log(error);
     }
