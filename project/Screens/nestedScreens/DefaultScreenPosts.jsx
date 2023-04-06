@@ -83,7 +83,6 @@ const DefaultScreenPosts = ({ navigation }) => {
           <Text style={styles.email}>{userEmail}</Text>
         </View>
       </View>
-      {/* {posts.length===0 && <Text style={styles.name}>Создать публикацию</Text>} */}
       <FlatList
         data={posts}
         keyExtractor={(item, index) => {
@@ -102,7 +101,9 @@ const DefaultScreenPosts = ({ navigation }) => {
               <View>
                 <TouchableOpacity
                   onPress={() =>
-                    navigation.navigate("Комментарии", { postId: item.id })
+                    navigation.navigate("Комментарии", {
+                      postId: item.id,
+                    photo:item.photo })
                   }
                 >
                   <Feather name="message-circle" size={24} color="#BDBDBD" />
@@ -111,25 +112,24 @@ const DefaultScreenPosts = ({ navigation }) => {
 
               <View style={styles.wrapperLocation}>
                 <TouchableOpacity
-                  style={styles.location}
+                  // style={styles.location}
                   onPress={() =>
                     navigation.navigate("MapScreen", {
                       location: item.location,
                     })
                   }
                 >
-              <Ionicons name="location-outline" size={24} color="#BDBDBD" />
-               
-                  {/* <View style={styles.locationName}>
-                    <Text >
-                    {item.location.longitude}
-                  </Text>
-                  </View> */}
-              
+                  <Ionicons name="location-outline" size={24} color="#BDBDBD" />
                 </TouchableOpacity>
-                           <Text >
-                    {item.location.longitude}
-                  </Text>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("MapScreen", {
+                      location: item.location,
+                    })
+                  }
+                >
+                  <Text style={styles.location}>{item.location.longitude}</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -146,8 +146,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 15,
-
-
   },
   userInfo: {
     flexDirection: "row",
@@ -189,8 +187,8 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
   post: {
-  height: 240,
-    width: '100%',
+    height: 240,
+    width: "100%",
     borderRadius: 8,
   },
   box: {
@@ -217,18 +215,16 @@ const styles = StyleSheet.create({
     // borderColor: "red",
     // borderWidth: 1,
   },
-  location: {
+  wrapperLocation: {
+    display: "flex",
+    flexDirection: "row",
     alignItems: "center",
-    marginBottom: 8,
+  },
+  location: {
     fontFamily: "RobotoMedium",
     fontStyle: "normal",
-    fontSize: 50,
+    fontSize: 16,
     lineHeight: 19,
     color: "#212121",
-    marginLeft: 30,
   },
-  // locationName: {
-  //     display: "flex",
-  //   flexDirection: "row",
-  // },
 });

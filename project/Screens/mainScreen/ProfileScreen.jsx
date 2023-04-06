@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 import {
   StyleSheet,
   View,
@@ -8,20 +10,37 @@ import {
   ImageBackground,
 } from "react-native";
 
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+
 import { useEffect, useState } from "react";
 
 import { useSelector } from "react-redux";
 
-import { EvilIcons } from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 
 import app from "../../firebase/config";
 import { getFirestore, collection, onSnapshot } from "firebase/firestore";
 
 const db = getFirestore(app);
 
+SplashScreen.preventAutoHideAsync();
+
 const ProfileScreen = ({ navigation }) => {
   const [userPosts, setUserPosts] = useState([]);
   const { userId, userName, userEmail } = useSelector((state) => state.auth);
+
+  const [fontsLoaded] = useFonts({
+    RobotoRegular: require("../../assets/fonts/Roboto-Regular.ttf"),
+    RobotoMedium: require("../../assets/fonts/Roboto-Medium.ttf"),
+    RobotoBold: require("../../assets/fonts/Roboto-Bold.ttf"),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
 
   useEffect(() => {
     getUserPosts();
@@ -45,6 +64,10 @@ const ProfileScreen = ({ navigation }) => {
     //   setUserPosts((prevUserPosts) => [...prevUserPosts, { ...doc.data() }]);
     // });
   };
+
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
@@ -73,15 +96,48 @@ const ProfileScreen = ({ navigation }) => {
                 <View>
                   <Image source={{ uri: item.photo }} style={styles.post} />
                   <View>
-                    <Text>{item.comment}</Text>
+                    <Text style={styles.title}>{item.comment}</Text>
                   </View>
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("Комментарии", { postId: item.id })
-                    }
-                  >
-                    <EvilIcons name="comment" size={24} color="black" />
-                  </TouchableOpacity>
+                  <View style={styles.box}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("Комментарии", { postId: item.id })
+                      }
+                    >
+                      <Feather
+                        name="message-circle"
+                        size={24}
+                        color="#BDBDBD"
+                      />
+                    </TouchableOpacity>
+
+                    <View style={styles.wrapperLocation}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate("MapScreen", {
+                            location: item.location,
+                          })
+                        }
+                      >
+                        <Ionicons
+                          name="location-outline"
+                          size={24}
+                          color="#BDBDBD"
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate("MapScreen", {
+                            location: item.location,
+                          })
+                        }
+                      >
+                        <Text style={styles.location}>
+                          {item.location.longitude}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                 </View>
               )}
             />
@@ -97,9 +153,6 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
-    // borderColor: "red",
-    // borderWidth: 1,
   },
   image: {
     flex: 1,
@@ -111,11 +164,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 16,
 
-        borderTopRightRadius: 25,
+    borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
 
-  //  borderColor: "red",
-  //   borderWidth: 1,
+    //  borderColor: "red",
+    //   borderWidth: 1,
   },
 
   userInfo: {
@@ -142,18 +195,48 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
   },
-  user: {
-    //  textAlign:"center",
-  },
   name: {
+    fontFamily: "RobotoMedium",
+    fontStyle: "normal",
     fontSize: 30,
+    lineHeight: 35,
+    color: "#212121",
   },
   postsList: {
-    marginBottom: 170,
+    marginBottom:120,
   },
   post: {
     height: 240,
-    width: '100%',
+    width: "100%",
     borderRadius: 8,
+  },
+  box: {
+    display: "flex",
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 32,
+  },
+
+  title: {
+    marginTop: 8,
+    marginBottom: 8,
+    fontFamily: "RobotoMedium",
+    fontStyle: "normal",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+  },
+  wrapperLocation: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  location: {
+    fontFamily: "RobotoMedium",
+    fontStyle: "normal",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
   },
 });

@@ -8,8 +8,9 @@ import CommentsScreen from "../nestedScreens/CommentsScreen";
 const NestedScreen = createStackNavigator();
 
 const Home = () => {
+   console.log("hello")
   return (
-    <NestedScreen.Navigator>
+    <NestedScreen.Navigator >
       <NestedScreen.Screen
         name="DefaultScreen"
         component={DefaultScreenPosts}
@@ -20,7 +21,11 @@ const Home = () => {
         name="Комментарии"
         component={CommentsScreen}
         // screenOptions={{ tabBarStyle: { display: "none" } }}
-        // options={{ headerShown: false }}
+        options={{
+          // title: false,
+          // headerShown: false
+        }}
+       
       />
     </NestedScreen.Navigator>
   );

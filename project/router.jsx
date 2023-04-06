@@ -135,11 +135,19 @@ const useRoute = (isAuth) => {
         }}
       />
       <Tabs.Screen
-        // name="Публикации"
         name="Профиль"
         component={ProfileScreen}
         options={{
-          // headerShown: false,
+          title: false,
+           headerRight: () => (
+            <TouchableOpacity onPress={signOut}>
+              <Feather name="log-out" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+          ),
+          headerRightContainerStyle: {
+            paddingRight: 15,
+          },
+
           tabBarIcon: ({ focused, color, size }) => {
             return (
               <Feather
@@ -149,12 +157,6 @@ const useRoute = (isAuth) => {
               />
             );
           },
-
-          headerRight: () => (
-            <TouchableOpacity onPress={signOut}>
-              <Feather name="log-out" size={24} color="#BDBDBD" />
-            </TouchableOpacity>
-          ),
         }}
 
         // headerRight: () => (
