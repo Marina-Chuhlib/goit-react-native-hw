@@ -61,7 +61,14 @@ const useRoute = (isAuth) => {
         tabBarItemStyle: {
           borderTopColor: "#E5E5E5",
           borderTopWidth: 1,
+
+              width: 70,
+            height: 40,
+            borderRadius: 20,
         },
+            tabBarActiveBackgroundColor: "#FF6C00",
+          tabBarActiveTintColor: "#FFFFFF",
+          tabBarInactiveBackgroundColor: "#FFFFFF",
       }}
     >
       <Tabs.Screen
@@ -80,13 +87,12 @@ const useRoute = (isAuth) => {
               <Feather
                 name="grid"
                 size={24}
-                color={focused ? "#FF6C00" : color}
+                color={focused ? "#FFFFFF" : "#BDBDBD"}
               />
-              // <Ionicons name="add" size={24} color={focused ? "#FF6C00" : color}/>
             );
           },
           tabBarIconStyle: {
-            marginTop: 9,
+            // marginTop: 9,
           },
 
           headerRight: () => (
@@ -101,6 +107,7 @@ const useRoute = (isAuth) => {
           headerRightContainerStyle: {
             paddingRight: 15,
           },
+      
         }}
       />
 
@@ -112,18 +119,11 @@ const useRoute = (isAuth) => {
             return (
               <Ionicons
                 name="add"
-                size={24}
-                color={focused ? "#FF6C00" : color}
+                size={30}
+                color={focused ? "#FFFFFF" : "#BDBDBD"}
               />
             );
           },
-          // tabBarIconStyle: {
-          //   backgroundColor: "#FF6C00",
-          //   width: 70,
-          //   height: 40,
-          //   borderRadius: 50,
-          //   marginTop: 9,
-          // },
 
           headerLeft: () => MyBackButton(),
 
@@ -155,14 +155,10 @@ const useRoute = (isAuth) => {
               <Feather
                 name="user"
                 size={24}
-                color={focused ? "#FF6C00" : color}
+                color={!focused ? "#BDBDBD" : color}
               />
             );
           },
-          //  tabBarIconStyle: { width:20,},
-          // tabBarActiveBackgroundColor: "#FF6C00",
-          // tabBarActiveTintColor: "#FFFFFF",
-          // headerShown: false,
         }}
       />
     </Tabs.Navigator>
