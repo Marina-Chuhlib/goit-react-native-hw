@@ -1,8 +1,3 @@
-import { useCallback } from "react";
-
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-
 import {
   StyleSheet,
   View,
@@ -29,8 +24,6 @@ import {
 
 import { AntDesign } from "@expo/vector-icons";
 
-SplashScreen.preventAutoHideAsync();
-
 const db = getFirestore(app);
 
 const CommentsScreen = ({ route, navigation }) => {
@@ -39,18 +32,6 @@ const CommentsScreen = ({ route, navigation }) => {
   const [allComments, setAllComments] = useState([]);
 
   const { userName } = useSelector((state) => state.auth);
-
-  const [fontsLoaded] = useFonts({
-    RobotoRegular: require("../../assets/fonts/Roboto-Regular.ttf"),
-    RobotoMedium: require("../../assets/fonts/Roboto-Medium.ttf"),
-    RobotoBold: require("../../assets/fonts/Roboto-Bold.ttf"),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
 
   useEffect(() => {
     getAllPosts();
@@ -98,10 +79,6 @@ const CommentsScreen = ({ route, navigation }) => {
     //   ]);
     // });
   };
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   return (
     <View style={styles.container}>

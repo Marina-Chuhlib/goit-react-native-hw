@@ -8,7 +8,7 @@ import CommentsScreen from "../nestedScreens/CommentsScreen";
 const NestedScreen = createStackNavigator();
 
 const Home = () => {
-  console.log("hello");
+  console.log("hello")
   return (
     <NestedScreen.Navigator>
       <NestedScreen.Screen
