@@ -120,7 +120,7 @@ const CreatePostsScreen = ({ navigation }) => {
     uploadPostToServer();
     setComment("");
     setPhoto("");
-    navigation.navigate("DefaultScreen");
+    navigation.navigate("PostsScreen");
   };
 
   const deletePhoto = () => {

@@ -54,7 +54,6 @@ const CommentsScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     getAllPosts();
-    // navigation.setOptions({ tabBarStyle: { display: "none" } });
   }, []);
 
   const createPost = async () => {

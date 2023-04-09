@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { getHeaderTitle } from "@react-navigation/elements";
+import { useNavigation } from "@react-navigation/native";
 
 import { TouchableOpacity } from "react-native";
 
@@ -14,11 +14,21 @@ import Home from "./Screens/mainScreen/Home";
 import CreatePostsScreen from "./Screens/mainScreen/CreatePostsScreen";
 import ProfileScreen from "./Screens/mainScreen/ProfileScreen";
 
+
 import { authSignOutUser } from "./redux/auth/authOperations";
 import { useDispatch } from "react-redux";
 
 const MainStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
+
+function MyBackButton() {
+  const navigation = useNavigation();
+  return (
+    <TouchableOpacity onPress={() => navigation.goBack()}>
+      <Ionicons name="arrow-back" size={24} color="#212121" />
+    </TouchableOpacity>
+  );
+}
 
 const useRoute = (isAuth) => {
   const dispatch = useDispatch();
@@ -60,7 +70,6 @@ const useRoute = (isAuth) => {
         component={Home}
         options={{
           title: "Публикации",
-
           tabBarIcon: ({ focused, color, size }) => {
             return (
               <Feather
@@ -105,25 +114,7 @@ const useRoute = (isAuth) => {
             marginTop: 9,
           },
 
-          // headerRight: () => (
-          //   <TouchableOpacity onPress={signOut}>
-          //     <Feather name="log-out" size={24} color="#BDBDBD" />
-          //   </TouchableOpacity>
-          // ),
-
-          // headerStyle: {
-          //   borderBottomColor: "#E5E5E5",
-          //   borderBottomWidth: 1,
-          // },
-          // headerRightContainerStyle: {
-          //   paddingRight: 15,
-          // },
-
-          headerLeft: () => (
-            <TouchableOpacity>
-              <Ionicons name="arrow-back" size={24} color="#212121" />
-            </TouchableOpacity>
-          ),
+          headerLeft: () => MyBackButton(),
 
           headerStyle: {
             borderBottomColor: "#E5E5E5",
@@ -139,7 +130,7 @@ const useRoute = (isAuth) => {
         component={ProfileScreen}
         options={{
           title: false,
-           headerRight: () => (
+          headerRight: () => (
             <TouchableOpacity onPress={signOut}>
               <Feather name="log-out" size={24} color="#BDBDBD" />
             </TouchableOpacity>
@@ -158,12 +149,6 @@ const useRoute = (isAuth) => {
             );
           },
         }}
-
-        // headerRight: () => (
-        //   <TouchableOpacity onPress={signOut}>
-        //     <Feather name="log-out" size={24} color="#BDBDBD" />
-        //   </TouchableOpacity>
-        // ),
       />
     </Tabs.Navigator>
   );
