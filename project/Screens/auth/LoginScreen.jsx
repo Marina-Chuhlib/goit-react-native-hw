@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext,useEffect } from "react";
+import React, { useState} from "react";
 import {
   StyleSheet,
   TextInput,
@@ -14,13 +14,8 @@ import {
 
 import { useDispatch } from "react-redux";
 
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-
-import { isAuthContext } from "../../App";
 import { authSignInUser } from "../../redux/auth/authOperations";
 
-SplashScreen.preventAutoHideAsync();
 
 const initialState = {
   email: "",
@@ -38,20 +33,8 @@ const LoginScreen = ({ navigation }) => {
     password: false,
   });
   const [isShowPassword, setIsShowPassword] = useState(true);
-  const [fontsLoaded] = useFonts({
-    RobotoRegular: require("../../assets/fonts/Roboto-Regular.ttf"),
-    RobotoMedium: require("../../assets/fonts/Roboto-Medium.ttf"),
-  });
 
   const dispatch = useDispatch();
-
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-  
 
   const handleSubmit = () => {
     dispatch(authSignInUser(state));
@@ -59,10 +42,6 @@ const LoginScreen = ({ navigation }) => {
     navigation.navigate("Home");
     setState(initialState);
   };
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   return (
     <TouchableWithoutFeedback
@@ -78,7 +57,6 @@ const LoginScreen = ({ navigation }) => {
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
-            <View onLayout={onLayoutRootView}>
               <View
                 style={{
                   ...styles.formWrapper,
@@ -207,7 +185,6 @@ const LoginScreen = ({ navigation }) => {
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>
           </KeyboardAvoidingView>
         </ImageBackground>
       </View>

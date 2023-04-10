@@ -1,16 +1,19 @@
 import React from "react";
+import { TouchableOpacity } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import PostsScreen from "./PostsScreen";
 import MapScreen from "../nestedScreens/MapScreen";
 import CommentsScreen from "../nestedScreens/CommentsScreen";
 
+import { Feather } from "@expo/vector-icons";
+
 const NestedScreen = createStackNavigator();
 
-const Home = () => {
-  console.log("hello")
+
+const Home = ({navigation}) => {
   return (
-    <NestedScreen.Navigator>
+    <NestedScreen.Navigator  >
       <NestedScreen.Screen
         name="PostsScreen"
         component={PostsScreen}
@@ -20,7 +23,19 @@ const Home = () => {
       <NestedScreen.Screen
         name="Комментарии"
         component={CommentsScreen}
-        options={{ tabBarVisible: false ,headerShown: false}}
+        options={{
+          headerLeft: () => (
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Feather
+                name="arrow-left"
+                size={24}
+                color="#212121"
+                style={{ marginLeft: 16 }}
+              />
+            </TouchableOpacity>
+          ),
+        }}
+
       />
     </NestedScreen.Navigator>
   );

@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 
+
 import { TouchableOpacity } from "react-native";
 
 import { Feather } from "@expo/vector-icons";
@@ -19,6 +20,7 @@ import { useDispatch } from "react-redux";
 
 const MainStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
+
 
 function MyBackButton() {
   const navigation = useNavigation();
@@ -42,7 +44,8 @@ const useRoute = (isAuth) => {
         <MainStack.Screen
           name="Registration"
           component={RegistrationScreen}
-          options={{ headerShown: "Registration" }}
+          // options={{ headerShown: "Registration" }}
+          options={{ headerShown: false }}
         />
         <MainStack.Screen
           name="Login"
@@ -53,32 +56,39 @@ const useRoute = (isAuth) => {
     );
   }
   return (
+
     <Tabs.Navigator
       initialRouteName="Home"
       screenOptions={{
+
         tabBarShowLabel: false,
         tabBarShowIcon: true,
         tabBarItemStyle: {
           borderTopColor: "#E5E5E5",
           borderTopWidth: 1,
 
-              width: 70,
-            height: 40,
-            borderRadius: 20,
+          width: 70,
+          height: 40,
+          borderRadius: 20,
         },
-            tabBarActiveBackgroundColor: "#FF6C00",
-          tabBarActiveTintColor: "#FFFFFF",
-          tabBarInactiveBackgroundColor: "#FFFFFF",
+        tabBarActiveBackgroundColor: "#FF6C00",
+        tabBarActiveTintColor: "#FFFFFF",
+        tabBarInactiveBackgroundColor: "#FFFFFF",
+
+        tabBarStyle: {
+          paddingHorizontal: 15,
+        },
       }}
     >
       <Tabs.Screen
         name="Home"
         component={Home}
+   
         options={{
           title: "Публикации",
           headerTitleStyle: {
             fontSize: 17,
-            fontFamily: "Roboto-Medium",
+            fontFamily: "RobotoMedium",
             lineHeight: 22,
             color: "#212121",
           },
@@ -107,7 +117,6 @@ const useRoute = (isAuth) => {
           headerRightContainerStyle: {
             paddingRight: 15,
           },
-      
         }}
       />
 

@@ -1,8 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
-import { Alert } from "react-native";
+import { useState, useEffect } from "react";
 
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+import { useSelector } from "react-redux";
 
 import {
   StyleSheet,
@@ -11,41 +9,24 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  Alert
 } from "react-native";
-
-import { useSelector } from "react-redux";
 
 import { Ionicons, Feather } from "@expo/vector-icons";
 
 import app from "../../firebase/config";
 import {
   getFirestore,
-  getDocs,
   collection,
   onSnapshot,
 } from "firebase/firestore";
 
-SplashScreen.preventAutoHideAsync();
 
 const db = getFirestore(app);
-
-// DEfault
 
 const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   const { userName, userEmail } = useSelector((state) => state.auth);
-
-  const [fontsLoaded] = useFonts({
-    RobotoRegular: require("../../assets/fonts/Roboto-Regular.ttf"),
-    RobotoMedium: require("../../assets/fonts/Roboto-Medium.ttf"),
-    RobotoBold: require("../../assets/fonts/Roboto-Bold.ttf"),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
 
   useEffect(() => {
     getAllPost();
@@ -66,10 +47,6 @@ const PostsScreen = ({ navigation }) => {
       Alert.alert("Try again");
     }
   };
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   return (
     <View style={styles.container}>
@@ -105,7 +82,8 @@ const PostsScreen = ({ navigation }) => {
                   onPress={() =>
                     navigation.navigate("Комментарии", {
                       postId: item.id,
-                    photo:item.photo })
+                      photo: item.photo,
+                    })
                   }
                 >
                   <Feather name="message-circle" size={24} color="#BDBDBD" />
@@ -114,7 +92,6 @@ const PostsScreen = ({ navigation }) => {
 
               <View style={styles.wrapperLocation}>
                 <TouchableOpacity
-                  // style={styles.location}
                   onPress={() =>
                     navigation.navigate("MapScreen", {
                       location: item.location,
@@ -130,7 +107,7 @@ const PostsScreen = ({ navigation }) => {
                     })
                   }
                 >
-                  <Text style={styles.location}>{item.location.longitude}</Text>
+                  <Text style={styles.location}>{item.locationName}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -155,9 +132,6 @@ const styles = StyleSheet.create({
     height: 60,
     alignItems: "center",
     marginBottom: 32,
-
-    // borderColor: "red",
-    // borderWidth: 1,
   },
   imgBox: {
     width: 60,
@@ -169,10 +143,6 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 16,
-  },
-  user: {
-    // borderColor: "red",
-    // borderWidth: 1,
   },
   name: {
     fontFamily: "RobotoBold",

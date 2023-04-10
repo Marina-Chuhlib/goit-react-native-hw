@@ -66,18 +66,6 @@ const CommentsScreen = ({ route, navigation }) => {
     } catch (error) {
       console.log(error);
     }
-
-    // const docRef = await doc(db, "posts", postId);
-    // const querySnapshot = await getDocs(collection(docRef, "comments"));
-
-    // await querySnapshot.forEach((doc) => {
-    //   console.log(doc.data(), "data");
-    //   // console.log(doc.post.date, "time")
-    //   setAllComments((prevAllComment) => [
-    //     ...prevAllComment,
-    //     { ...doc.data(), id: doc.id },
-    //   ]);
-    // });
   };
 
   return (
@@ -134,6 +122,7 @@ const styles = StyleSheet.create({
     maxHeight: 270,
   },
   commentContainer: {
+    padding: 16,
     marginBottom: 24,
     borderRadius: 6,
     backgroundColor: "rgba(0, 0, 0, 0.03)",

@@ -1,10 +1,7 @@
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 import { Alert } from "react-native";
@@ -25,8 +22,6 @@ import app from "../../firebase/config";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-SplashScreen.preventAutoHideAsync();
-
 const storage = getStorage(db);
 
 const cloudDB = getFirestore(app);
@@ -36,21 +31,9 @@ const CreatePostsScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState("");
   const [comment, setComment] = useState("");
   const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
   const [locationName, setLocationName] = useState("");
 
   const { userId, userName } = useSelector((state) => state.auth);
-
-  const [fontsLoaded] = useFonts({
-    RobotoRegular: require("../../assets/fonts/Roboto-Regular.ttf"),
-    RobotoMedium: require("../../assets/fonts/Roboto-Medium.ttf"),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
 
   useEffect(() => {
     (async () => {
@@ -104,6 +87,7 @@ const CreatePostsScreen = ({ navigation }) => {
         photo,
         comment,
         location,
+        locationName,
         userId,
         userName,
       });
@@ -112,35 +96,32 @@ const CreatePostsScreen = ({ navigation }) => {
     }
   };
 
+  const removeFields = () => {
+    setComment("");
+    setPhoto("");
+    setLocationName("");
+  };
+
   const sendPhoto = () => {
     if (!photo) {
       Alert.alert("Загрузите фото");
       return;
     }
     uploadPostToServer();
-    setComment("");
-    setPhoto("");
+    removeFields();
     navigation.navigate("PostsScreen");
   };
 
   const deletePhoto = () => {
-    setPhoto("");
-    setComment("");
+    removeFields();
   };
 
-  let text = "Waiting..";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-
-    text=JSON.stringify(location)
-
-  }
-
-
-  if (!fontsLoaded) {
-    return null;
-  }
+  // let text = "Waiting..";
+  // if (errorMsg) {
+  //   text = errorMsg;
+  // } else if (location) {
+  //   text = JSON.stringify(location);
+  // }
 
   return (
     <>
@@ -176,9 +157,9 @@ const CreatePostsScreen = ({ navigation }) => {
             placeholderTextColor={"#BDBDBD"}
             placeholder="Местность..."
             style={styles.inputLocation}
-          >
-            {photo && <Text>{text}</Text>}
-          </TextInput>
+            value={locationName}
+            onChangeText={(value) => setLocationName(value)}
+          ></TextInput>
           <TouchableOpacity
             style={styles.locationBtn}
             onPress={() =>

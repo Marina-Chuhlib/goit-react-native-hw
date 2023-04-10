@@ -75,7 +75,7 @@ const RegistrationScreen = ({ navigation }) => {
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
-            <View onLayout={onLayoutRootView}>
+        
               <View
                 style={{
                   ...styles.formWrapper,
@@ -243,7 +243,7 @@ const RegistrationScreen = ({ navigation }) => {
                   </TouchableOpacity>
                 </View>
               </View>
-            </View>
+   
           </KeyboardAvoidingView>
         </ImageBackground>
       </View>
