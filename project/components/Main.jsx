@@ -21,7 +21,7 @@ const Main = () => {
 
   const routing = useRoute(stateChange);
 
-  return <NavigationContainer>{routing}</NavigationContainer>;
+  return  <NavigationContainer>{routing}</NavigationContainer>;
 };
 
 export default Main;

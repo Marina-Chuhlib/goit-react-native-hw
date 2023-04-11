@@ -26,15 +26,17 @@ import { AntDesign } from "@expo/vector-icons";
 
 const db = getFirestore(app);
 
-const CommentsScreen = ({ route, navigation }) => {
+const CommentsScreen = ({ route }) => {
   const { postId, photo } = route.params;
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
+
 
   const { userName } = useSelector((state) => state.auth);
 
   useEffect(() => {
     getAllPosts();
+    console.log(allComments.length);
   }, []);
 
   const createPost = async () => {
@@ -63,6 +65,8 @@ const CommentsScreen = ({ route, navigation }) => {
           }))
         )
       );
+    
+
     } catch (error) {
       console.log(error);
     }
@@ -103,6 +107,7 @@ const CommentsScreen = ({ route, navigation }) => {
         <AntDesign name="arrowup" size={20} color="#FFFFFF" />
         {/* <Text style={styles.buttonText}>Опубликовать</Text> */}
       </TouchableOpacity>
+      {/* <Text>{ allComments.length}</Text> */}
     </View>
   );
 };
@@ -119,7 +124,7 @@ const styles = StyleSheet.create({
   wrapper: {
     // borderColor: "red",
     // borderWidth: 1,
-    maxHeight: 270,
+    height: 280,
   },
   commentContainer: {
     padding: 16,
@@ -133,7 +138,6 @@ const styles = StyleSheet.create({
     height: 240,
     width: "100%",
     borderRadius: 8,
-
     marginBottom: 32,
   },
   input: {

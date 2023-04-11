@@ -3,7 +3,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation } from "@react-navigation/native";
 
-
 import { TouchableOpacity } from "react-native";
 
 import { Feather } from "@expo/vector-icons";
@@ -20,7 +19,6 @@ import { useDispatch } from "react-redux";
 
 const MainStack = createStackNavigator();
 const Tabs = createBottomTabNavigator();
-
 
 function MyBackButton() {
   const navigation = useNavigation();
@@ -56,20 +54,19 @@ const useRoute = (isAuth) => {
     );
   }
   return (
-
     <Tabs.Navigator
       initialRouteName="Home"
       screenOptions={{
-
         tabBarShowLabel: false,
         tabBarShowIcon: true,
         tabBarItemStyle: {
-          borderTopColor: "#E5E5E5",
-          borderTopWidth: 1,
-
-          width: 70,
           height: 40,
+          maxWidth: 70,
           borderRadius: 20,
+          marginTop: 9,
+          marginRight: 15,
+          marginLeft:15
+         
         },
         tabBarActiveBackgroundColor: "#FF6C00",
         tabBarActiveTintColor: "#FFFFFF",
@@ -77,13 +74,14 @@ const useRoute = (isAuth) => {
 
         tabBarStyle: {
           paddingHorizontal: 15,
+          justifyContent: "center",
+          alignItems: "center",
         },
       }}
     >
       <Tabs.Screen
         name="Home"
         component={Home}
-   
         options={{
           title: "Публикации",
           headerTitleStyle: {
@@ -98,13 +96,19 @@ const useRoute = (isAuth) => {
                 name="grid"
                 size={24}
                 color={focused ? "#FFFFFF" : "#BDBDBD"}
+                style={
+                  {
+                    // marginRight:31,
+                    // paddingHorizontal: focused ? 20 : 0,
+                    // borderWidth: focused ? 1 : 0,
+                    // borderRadius: focused ? 16 : 0,
+                    // backgroundColor: focused ? "#FF6C00" : "#FFFFFF"
+                    // alignSelf: focused ? "center" : "right",
+                  }
+                }
               />
             );
           },
-          tabBarIconStyle: {
-            // marginTop: 9,
-          },
-
           headerRight: () => (
             <TouchableOpacity onPress={signOut}>
               <Feather name="log-out" size={24} color="#BDBDBD" />
@@ -118,6 +122,10 @@ const useRoute = (isAuth) => {
             paddingRight: 15,
           },
         }}
+        //   tabBarOptions={{
+        //   showLabel: true,
+        //   tabBarIconPosition: 'beside-label',
+        // }}
       />
 
       <Tabs.Screen

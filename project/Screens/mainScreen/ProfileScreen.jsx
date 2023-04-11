@@ -30,17 +30,6 @@ const ProfileScreen = ({ navigation }) => {
   const [userPosts, setUserPosts] = useState([]);
   const { userId, userName, userEmail } = useSelector((state) => state.auth);
 
-  const [fontsLoaded] = useFonts({
-    RobotoRegular: require("../../assets/fonts/Roboto-Regular.ttf"),
-    RobotoMedium: require("../../assets/fonts/Roboto-Medium.ttf"),
-    RobotoBold: require("../../assets/fonts/Roboto-Bold.ttf"),
-  });
-
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
 
   useEffect(() => {
     getUserPosts();
@@ -64,10 +53,6 @@ const ProfileScreen = ({ navigation }) => {
     //   setUserPosts((prevUserPosts) => [...prevUserPosts, { ...doc.data() }]);
     // });
   };
-
-  if (!fontsLoaded) {
-    return null;
-  }
 
   return (
     <View style={styles.container}>
@@ -132,8 +117,8 @@ const ProfileScreen = ({ navigation }) => {
                           })
                         }
                       >
-                        <Text style={styles.location}>
-                          {item.location.longitude}
+                        <Text style={styles.locationName}>
+                          {item.locationName}
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -239,4 +224,13 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     color: "#212121",
   },
+  locationName: {
+   marginLeft:4,
+    fontFamily: "RobotoRegular",
+    fontStyle: "normal",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+    textDecorationLine: "underline"
+  }
 });

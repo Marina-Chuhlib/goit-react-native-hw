@@ -9,7 +9,7 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
-  Alert
+  Alert,
 } from "react-native";
 
 import { Ionicons, Feather } from "@expo/vector-icons";
@@ -19,17 +19,19 @@ import {
   getFirestore,
   collection,
   onSnapshot,
+  doc,
 } from "firebase/firestore";
-
 
 const db = getFirestore(app);
 
 const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
+  //  const [allComments, setAllComments] = useState([]);
   const { userName, userEmail } = useSelector((state) => state.auth);
 
   useEffect(() => {
     getAllPost();
+   
   }, []);
 
   const getAllPost = async () => {
@@ -37,8 +39,8 @@ const PostsScreen = ({ navigation }) => {
       await onSnapshot(collection(db, "posts"), (snapshots) => {
         setPosts(snapshots.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       });
-      // const querySnapshot = await getDocs(collection(db, "posts"));
 
+      // const querySnapshot = await getDocs(collection(db, "posts"));
       // await querySnapshot.forEach((doc) => {
       //   setPosts((prevPosts) => [...prevPosts, { ...doc.data(), id: doc.id }]);
       // });
@@ -66,7 +68,6 @@ const PostsScreen = ({ navigation }) => {
         data={posts}
         keyExtractor={(item, index) => {
           index.toString();
-          console.log(item.location.longitude);
         }}
         renderItem={({ item }) => (
           <View>
@@ -107,7 +108,7 @@ const PostsScreen = ({ navigation }) => {
                     })
                   }
                 >
-                  <Text style={styles.location}>{item.locationName}</Text>
+                  <Text style={styles.locationName}>{item.locationName}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -199,4 +200,12 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     color: "#212121",
   },
+  locationName: {
+    fontFamily: "RobotoRegular",
+    fontStyle: "normal",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+    textDecorationLine: "underline"
+  }
 });
