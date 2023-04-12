@@ -20,18 +20,22 @@ import {
   collection,
   onSnapshot,
   doc,
+  query,
 } from "firebase/firestore";
 
 const db = getFirestore(app);
 
-const PostsScreen = ({ navigation }) => {
+const PostsScreen = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
-  //  const [allComments, setAllComments] = useState([]);
+  const [commentsCount, setCommentsCount] = useState({});
+
   const { userName, userEmail } = useSelector((state) => state.auth);
 
   useEffect(() => {
     getAllPost();
-   
+    posts.forEach((post) => {
+      getCommentsCount(post.id);
+    });
   }, []);
 
   const getAllPost = async () => {
@@ -39,14 +43,33 @@ const PostsScreen = ({ navigation }) => {
       await onSnapshot(collection(db, "posts"), (snapshots) => {
         setPosts(snapshots.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       });
-
-      // const querySnapshot = await getDocs(collection(db, "posts"));
-      // await querySnapshot.forEach((doc) => {
-      //   setPosts((prevPosts) => [...prevPosts, { ...doc.data(), id: doc.id }]);
-      // });
     } catch (error) {
       console.log(error.massage);
       Alert.alert("Try again");
+    }
+  };
+
+  useEffect(() => {
+    if (route.params?.commentsCount) {
+      setCommentsCount((prev) => ({
+        ...prev,
+        [route.params.postId]: route.params.commentsCount,
+      }));
+    }
+  }, [route.params]);
+
+  const getCommentsCount = async (postId) => {
+    try {
+      const commentsRef = collection(db, `posts/${postId}/comments`);
+      const queryRef = query(commentsRef);
+      const unsubscribe = onSnapshot(queryRef, (querySnapshot) => {
+        const commentsCount = querySnapshot.docs.length;
+        setCommentsCount((prev) => ({ ...prev, [postId]: commentsCount }));
+      });
+      return () => unsubscribe();
+    } catch (error) {
+      console.log(error);
+      setCommentsCount((prev) => ({ ...prev, [postId]: 0 }));
     }
   };
 
@@ -78,7 +101,7 @@ const PostsScreen = ({ navigation }) => {
             </View>
 
             <View style={styles.box}>
-              <View>
+              <View style={styles.commentWrapper}>
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate("Комментарии", {
@@ -89,6 +112,9 @@ const PostsScreen = ({ navigation }) => {
                 >
                   <Feather name="message-circle" size={24} color="#BDBDBD" />
                 </TouchableOpacity>
+                <Text style={styles.commentsCount}>
+                  {commentsCount[item.id] || 0}
+                </Text>
               </View>
 
               <View style={styles.wrapperLocation}>
@@ -180,6 +206,20 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     color: "#212121",
   },
+  commentWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  commentsCount: {
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#BDBDBD",
+    marginLeft: 9,
+
+    // borderColor: "red",
+    // borderWidth: 1,
+  },
   wrapperLocation: {
     display: "flex",
     flexDirection: "row",
@@ -206,6 +246,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     color: "#212121",
-    textDecorationLine: "underline"
-  }
+    textDecorationLine: "underline",
+  },
 });

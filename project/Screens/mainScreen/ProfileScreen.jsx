@@ -30,7 +30,7 @@ const db = getFirestore(app);
 const ProfileScreen = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
-  const [commentsCount, setCommentsCount] = useState({});
+   const [commentsCount, setCommentsCount] = useState({});
   const { userId, userName, userEmail } = useSelector((state) => state.auth);
 
   const getAllPost = async () => {
@@ -258,11 +258,7 @@ const styles = StyleSheet.create({
     // borderColor: "red",
     // borderWidth: 1,
   },
-  commentWrapper: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-  },
+
   title: {
     marginTop: 8,
     marginBottom: 8,
@@ -271,6 +267,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     color: "#212121",
+  },
+    commentWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   commentsCount: {
     fontSize: 16,
