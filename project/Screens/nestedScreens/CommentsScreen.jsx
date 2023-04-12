@@ -26,18 +26,21 @@ import { AntDesign } from "@expo/vector-icons";
 
 const db = getFirestore(app);
 
-const CommentsScreen = ({ route }) => {
+const CommentsScreen = ({ route, navigation }) => {
   const { postId, photo } = route.params;
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
-
+  const [commentsCount, setCommentsCount] = useState(0);
 
   const { userName } = useSelector((state) => state.auth);
 
   useEffect(() => {
     getAllPosts();
-    console.log(allComments.length);
   }, []);
+
+  useEffect(() => {
+    navigation.setParams({ commentsCount: commentsCount });
+  }, [commentsCount]);
 
   const createPost = async () => {
     if (!comment.trim()) {
@@ -65,8 +68,21 @@ const CommentsScreen = ({ route }) => {
           }))
         )
       );
-    
 
+      setCommentsCount(Number(allComments.length));
+      console.log(commentsCount,"commentsCount")
+
+      // const commentsQuery = query(collection(db, `posts/${postId}/comments`));
+
+      // onSnapshot(commentsQuery, (data) => {
+      //   const commentsData = data.docs.map((doc) => ({
+      //     ...doc.data(),
+      //     postId: doc.id,
+      //   }));
+      //   setAllComments(commentsData);
+      //   console.log(commentsData.length, "commentsData");
+      //   setCommentsCount(commentsData.length);
+      // });
     } catch (error) {
       console.log(error);
     }
@@ -76,7 +92,7 @@ const CommentsScreen = ({ route }) => {
     <View style={styles.container}>
       <View style={styles.postWrapper}>
         <Image source={{ uri: photo }} style={styles.post} />
-
+        <Text>{allComments.length}</Text>
         <SafeAreaView style={styles.wrapper}>
           <FlatList
             data={allComments}
@@ -99,6 +115,7 @@ const CommentsScreen = ({ route }) => {
         value={comment}
         onChangeText={(value) => setComment(value)}
       ></TextInput>
+
       <TouchableOpacity
         style={styles.button}
         activeOpacity={0.8}
@@ -107,7 +124,6 @@ const CommentsScreen = ({ route }) => {
         <AntDesign name="arrowup" size={20} color="#FFFFFF" />
         {/* <Text style={styles.buttonText}>Опубликовать</Text> */}
       </TouchableOpacity>
-      {/* <Text>{ allComments.length}</Text> */}
     </View>
   );
 };

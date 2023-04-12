@@ -10,48 +10,98 @@ import {
   ImageBackground,
 } from "react-native";
 
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
-
 import { useEffect, useState } from "react";
 
 import { useSelector } from "react-redux";
 
-import { Feather, Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
 import app from "../../firebase/config";
-import { getFirestore, collection, onSnapshot } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  onSnapshot,
+  where,
+  query,
+} from "firebase/firestore";
 
 const db = getFirestore(app);
 
-SplashScreen.preventAutoHideAsync();
-
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = ({ navigation, route }) => {
+  const [posts, setPosts] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
+  const [commentsCount, setCommentsCount] = useState({});
   const { userId, userName, userEmail } = useSelector((state) => state.auth);
 
+  const getAllPost = async () => {
+    try {
+      onSnapshot(collection(db, "posts"), (data) => {
+        const posts = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+        setPosts(posts);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAllPost();
+    posts.forEach((post) => {
+      getCommentsCount(post.id);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (route.params?.commentsCount) {
+      setCommentsCount((prev) => ({
+        ...prev,
+        [route.params.postId]: route.params.commentsCount,
+      }));
+    }
+  }, [route.params]);
+
+  const getCommentsCount = async (postId) => {
+    try {
+      const commentsRef = collection(db, `posts/${postId}/comments`);
+      const queryRef = query(commentsRef);
+      const unsubscribe = onSnapshot(queryRef, (querySnapshot) => {
+        const commentsCount = querySnapshot.docs.length;
+        setCommentsCount((prev) => ({ ...prev, [postId]: commentsCount }));
+        // console.log("PostId", postId);
+      });
+      return () => unsubscribe();
+    } catch (error) {
+      console.log(error);
+      setCommentsCount((prev) => ({ ...prev, [postId]: 0 }));
+    }
+  };
 
   useEffect(() => {
     getUserPosts();
+    return () => getUserPosts();
   }, []);
 
   const getUserPosts = async () => {
-    await onSnapshot(collection(db, "posts"), (snapshots) => {
-      setUserPosts(
-        snapshots.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-      );
-    });
-    // const citiesRef = await collection(db, "posts");
+    try {
+      const userPostsRef = collection(db, "posts");
+      const queryRef = query(userPostsRef, where("userId", "==", userId));
+      const unsubscribe = onSnapshot(queryRef, (querySnapshot) => {
+        const userPosts = querySnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setUserPosts(userPosts);
 
-    // const querySnapshot = await getDocs(
-    //   citiesRef,
-    //   where("userId", "==", "userId")
-    // );
-
-    // await querySnapshot.forEach((doc) => {
-
-    //   setUserPosts((prevUserPosts) => [...prevUserPosts, { ...doc.data() }]);
-    // });
+        if (userPosts && userPosts.length > 0) {
+          userPosts.forEach((post) => {
+            getCommentsCount(post.id.toString());
+          });
+        }
+      });
+      return () => unsubscribe();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -84,17 +134,20 @@ const ProfileScreen = ({ navigation }) => {
                     <Text style={styles.title}>{item.comment}</Text>
                   </View>
                   <View style={styles.box}>
-                    <TouchableOpacity
-                      onPress={() =>
-                        navigation.navigate("Комментарии", { postId: item.id })
-                      }
-                    >
-                      <Feather
-                        name="message-circle"
-                        size={24}
-                        color="#BDBDBD"
-                      />
-                    </TouchableOpacity>
+                    <View style={styles.commentWrapper}>
+                      <TouchableOpacity
+                        onPress={() =>
+                          navigation.navigate("Комментарии", {
+                            postId: item.id,
+                          })
+                        }
+                      >
+                        <FontAwesome name="comment" size={24} color="#FF6C00" />
+                      </TouchableOpacity>
+                      <Text style={styles.commentsCount}>
+                        {commentsCount[item.id] || 0}
+                      </Text>
+                    </View>
 
                     <View style={styles.wrapperLocation}>
                       <TouchableOpacity
@@ -188,7 +241,7 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
   postsList: {
-    marginBottom:120,
+    marginBottom: 120,
   },
   post: {
     height: 240,
@@ -201,8 +254,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 32,
-  },
 
+    // borderColor: "red",
+    // borderWidth: 1,
+  },
+  commentWrapper: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  },
   title: {
     marginTop: 8,
     marginBottom: 8,
@@ -211,6 +271,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     color: "#212121",
+  },
+  commentsCount: {
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+    marginLeft: 9,
+
+    // borderColor: "red",
+    // borderWidth: 1,
   },
   wrapperLocation: {
     display: "flex",
@@ -225,12 +294,12 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
   locationName: {
-   marginLeft:4,
+    marginLeft: 4,
     fontFamily: "RobotoRegular",
     fontStyle: "normal",
     fontSize: 16,
     lineHeight: 19,
     color: "#212121",
-    textDecorationLine: "underline"
-  }
+    textDecorationLine: "underline",
+  },
 });

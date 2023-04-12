@@ -10,10 +10,9 @@ import { Feather } from "@expo/vector-icons";
 
 const NestedScreen = createStackNavigator();
 
-
-const Home = ({navigation}) => {
+const Home = ({ navigation }) => {
   return (
-    <NestedScreen.Navigator  >
+    <NestedScreen.Navigator>
       <NestedScreen.Screen
         name="PostsScreen"
         component={PostsScreen}
@@ -35,7 +34,6 @@ const Home = ({navigation}) => {
             </TouchableOpacity>
           ),
         }}
-
       />
     </NestedScreen.Navigator>
   );

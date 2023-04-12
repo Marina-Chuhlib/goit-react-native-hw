@@ -29,6 +29,7 @@ function MyBackButton() {
   );
 }
 
+
 const useRoute = (isAuth) => {
   const dispatch = useDispatch();
 
@@ -54,6 +55,8 @@ const useRoute = (isAuth) => {
     );
   }
   return (
+    
+
     <Tabs.Navigator
       initialRouteName="Home"
       screenOptions={{
