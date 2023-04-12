@@ -274,6 +274,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   commentsCount: {
+    ntFamily: "RobotoRegular",
     fontSize: 16,
     lineHeight: 19,
     color: "#212121",
