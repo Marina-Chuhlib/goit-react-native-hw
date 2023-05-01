@@ -29,20 +29,15 @@ const PostsScreen = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
   const [commentsCount, setCommentsCount] = useState({});
 
-  const { userName, userEmail, userId } = useSelector((state) => state.auth);
-
-  useEffect(() => {
-    getAllPost();
-    posts.forEach((post) => {
-      getCommentsCount(post.id);
-    });
-  }, [posts]);
+  const { userName, userEmail, userId, photo } = useSelector(
+    (state) => state.auth
+  );
 
   const getAllPost = async () => {
     try {
       const userPostsRef = collection(db, "posts");
-      const queryRef =  query(userPostsRef, where("userId", "==", userId));
-      const unsubscribe = await onSnapshot(queryRef, (querySnapshot) => {
+      const queryRef = query(userPostsRef, where("userId", "==", userId));
+      await onSnapshot(queryRef, (querySnapshot) => {
         const userPosts = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
@@ -51,7 +46,7 @@ const PostsScreen = ({ navigation, route }) => {
       });
       return () => unsubscribe();
 
-      // await onSnapshot(collection(db, "posts"), (snapshots) => {
+      //  onSnapshot(collection(db, "posts"), (snapshots) => {
       //   setPosts(snapshots.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       // });
     } catch (error) {
@@ -59,6 +54,13 @@ const PostsScreen = ({ navigation, route }) => {
       Alert.alert("Try again");
     }
   };
+
+  useEffect(() => {
+  getAllPost();
+    posts.forEach((post) => {
+      getCommentsCount(post.id);
+    });
+  }, []);
 
   useEffect(() => {
     if (route.params?.commentsCount) {
@@ -91,6 +93,7 @@ const PostsScreen = ({ navigation, route }) => {
           <Image
             style={styles.avatar}
             source={require("../../assets/image/avatar.png")}
+            // source={photo}
           />
         </View>
         <View style={styles.user}>

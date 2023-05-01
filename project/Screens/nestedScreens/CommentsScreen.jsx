@@ -55,7 +55,6 @@ const CommentsScreen = ({ route, navigation }) => {
       postDate: new Date(),
     });
 
-    console.log(comment,"ADD")
     setComment("");
     
   };
@@ -95,7 +94,6 @@ const CommentsScreen = ({ route, navigation }) => {
     <View style={styles.container}>
       <View style={styles.postWrapper}>
         <Image source={{ uri: photo }} style={styles.post} />
-        <Text>{allComments.length}</Text>
         <SafeAreaView style={styles.wrapper}>
           <FlatList
             data={allComments}

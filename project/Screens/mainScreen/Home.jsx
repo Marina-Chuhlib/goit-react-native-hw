@@ -16,7 +16,9 @@ const Home = ({ navigation }) => {
       <NestedScreen.Screen
         name="PostsScreen"
         component={PostsScreen}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+        }}
       />
       <NestedScreen.Screen name="MapScreen" component={MapScreen} />
       <NestedScreen.Screen
@@ -35,7 +37,7 @@ const Home = ({ navigation }) => {
           ),
         }}
       />
-    </NestedScreen.Navigator>
+  </NestedScreen.Navigator>
   );
 };
 export default Home;

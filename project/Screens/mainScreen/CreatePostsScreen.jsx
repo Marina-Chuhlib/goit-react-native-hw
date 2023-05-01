@@ -4,8 +4,6 @@ import * as Location from "expo-location";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
-import { Alert } from "react-native";
-
 import {
   StyleSheet,
   View,
@@ -13,6 +11,7 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 
 import { FontAwesome, Ionicons, Feather } from "@expo/vector-icons";
@@ -71,11 +70,13 @@ const CreatePostsScreen = ({ navigation }) => {
 
     const uniquePostId = Date.now().toString();
     const storageRef = ref(storage, `postImage/${uniquePostId}`);
+    console.log(storageRef, "storageRef PROff");
 
     const data = await uploadBytes(storageRef, file);
+    console.log(data, "data");
 
     const getStorageRef = await getDownloadURL(storageRef);
-    // console.log(getStorageRef);
+    console.log(getStorageRef, "getStorageRef");
 
     return getStorageRef;
   };

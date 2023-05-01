@@ -17,8 +17,10 @@ import { useDispatch } from "react-redux";
 
 import * as ImagePicker from "expo-image-picker";
 
-import { useFonts } from "expo-font";
-import * as SplashScreen from "expo-splash-screen";
+import db from "../../firebase/config";
+const storage = getStorage(db);
+
+import { uploadBytes,uploadBytesResumable, ref, getDownloadURL, getStorage } from "firebase/storage";
 
 import { authSignUpUser } from "../../redux/auth/authOperations";
 
@@ -44,16 +46,6 @@ const RegistrationScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
 
-  const handleSubmit = () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
-
-    dispatch(authSignUpUser(state));
-
-    navigation.navigate("Home");
-    setState(initialState);
-  };
-
   const handleAddImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
@@ -76,6 +68,57 @@ const RegistrationScreen = ({ navigation }) => {
   const clearPhoto = () => {
     setPhoto(null);
   };
+
+  const uploadPhotoToServer = async () => {
+    try {
+      const response = await fetch(photo.uri);
+
+      const file = await response.blob();
+      const uniquePostId = Date.now().toString();
+
+      const storageRef = ref(storage, `profileAvatar/${uniquePostId}`);
+      console.log(storageRef, "storageRef")
+
+      // const data = await uploadBytes(storageRef, file);
+      // console.log(data, "data");
+
+      const data = await uploadBytesResumable(storageRef, file)
+
+      const getStorageRef = await getDownloadURL(storageRef);
+      console.log(getStorageRef, "getStorageRef");
+
+      return getStorageRef;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = async () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+
+    console.log("handleSubmit");
+
+    // const avatar = photo ? await uploadPhotoToServer() : null;
+    const avatar = await uploadPhotoToServer();
+    console.log(avatar, "avatar");
+
+    const user = {
+      userName: state.userName,
+      email: state.email,
+      password: state.password,
+      photo: avatar,
+    };
+
+    dispatch(authSignUpUser(user));
+
+    navigation.navigate("Home");
+    // setState({ userName: "", email: "", password: "" });
+
+    // setState(initialState);
+    setPhoto(null);
+  };
+
   return (
     <TouchableWithoutFeedback onPress={handleSubmit}>
       <View style={styles.container}>
@@ -109,17 +152,14 @@ const RegistrationScreen = ({ navigation }) => {
                       style={styles.iconBtnDel}
                     >
                       <Image
-                          style={styles.iconDel}
+                        style={styles.iconDel}
                         source={require("../../assets/image/del-avatar.icon.png")}
                       />
                     </TouchableOpacity>
                   </View>
                 ) : (
                   <View style={styles.iconBtn}>
-                    <TouchableOpacity
-                      onPress={handleAddImage}
-                      
-                    >
+                    <TouchableOpacity onPress={handleAddImage}>
                       <Image
                         style={styles.icon}
                         source={require("../../assets/image/add.png")}
@@ -312,19 +352,16 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: "90%",
     top: "65%",
-
   },
   icon: {
     width: 25,
     height: 25,
- 
   },
-  iconBtnDel:{   position: "absolute",
-    left: "85%",
-    top: "65%",},
+  iconBtnDel: { position: "absolute", left: "85%", top: "65%" },
   iconDel: {
     width: 35,
-    height: 35,},
+    height: 35,
+  },
   title: {
     fontFamily: "RobotoMedium",
     fontStyle: "normal",

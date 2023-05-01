@@ -31,8 +31,10 @@ const ProfileScreen = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
    const [commentsCount, setCommentsCount] = useState({});
-  const { userId, userName, userEmail } = useSelector((state) => state.auth);
-  console.log(userEmail)
+  const { userId, userName, email } = useSelector((state) => state.auth);
+
+  console.log("ProfileScreen")
+
 
   const getAllPost = async () => {
     try {
@@ -140,6 +142,7 @@ const ProfileScreen = ({ navigation, route }) => {
                         onPress={() =>
                           navigation.navigate("Комментарии", {
                             postId: item.id,
+                             photo: item.photo,
                           })
                         }
                       >
@@ -197,6 +200,9 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     justifyContent: "flex-end",
+
+      //  borderColor: "red",
+      // borderWidth: 1,
   },
   wrapper: {
     marginTop: 250,
@@ -255,9 +261,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 32,
-
-    // borderColor: "red",
-    // borderWidth: 1,
+ 
   },
 
   title: {
