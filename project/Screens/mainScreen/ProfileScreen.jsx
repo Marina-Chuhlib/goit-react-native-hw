@@ -128,7 +128,7 @@ const ProfileScreen = ({ navigation, route }) => {
           </View>
           {userPosts.length === 0 ? (
             <View style={styles.textWrapper}>
-              <Text style={styles.text}>У вас нет публикаций</Text>
+              <Text style={styles.text}>Нет публикаций</Text>
                    <TouchableOpacity onPress={() => navigation.navigate("Создать публикацию")}>
                   <Text style={styles.aside}>Создать публикацию?</Text>
                 </TouchableOpacity>

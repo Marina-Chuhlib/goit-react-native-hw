@@ -46,7 +46,7 @@ const PostsScreen = ({ navigation, route }) => {
       // });
       // // return () => unsubscribe();
 
-       onSnapshot(collection(db, "posts"), (snapshots) => {
+      onSnapshot(collection(db, "posts"), (snapshots) => {
         setPosts(snapshots.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       });
     } catch (error) {
@@ -56,7 +56,7 @@ const PostsScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-  getAllPost();
+    getAllPost();
     posts.forEach((post) => {
       getCommentsCount(post.id);
     });
@@ -86,6 +86,7 @@ const PostsScreen = ({ navigation, route }) => {
     }
   };
 
+
   return (
     <View style={styles.container}>
       <View style={styles.userInfo}>
@@ -101,62 +102,77 @@ const PostsScreen = ({ navigation, route }) => {
           <Text style={styles.email}>{userEmail}</Text>
         </View>
       </View>
-      <FlatList
-        data={posts}
-        keyExtractor={(item, index) => {
-          index.toString();
-        }}
-        renderItem={({ item }) => (
-          <View>
-            <Image source={{ uri: item.photo }} style={styles.post} />
-
+      {posts.length === 0 && (
+        <View style={styles.textWrapper}>
+          <Text style={styles.text}>Нет публикаций</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Создать публикацию")}
+          >
+            <Text style={styles.aside}>Создать публикацию?</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+      {posts && (
+        <FlatList
+          data={posts}
+          keyExtractor={(item, index) => {
+            index.toString();
+          }}
+          renderItem={({ item }) => (
             <View>
-              <Text style={styles.title}>{item.comment}</Text>
-            </View>
+              <Image source={{ uri: item.photo }} style={styles.post} />
 
-            <View style={styles.box}>
-              <View style={styles.commentWrapper}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("Комментарии", {
-                      prevScreen: 'Home' ,
-                      postId: item.id,
-                      photo: item.photo,
-                   
-                    })
-                  }
-                >
-                  <Feather name="message-circle" size={24} color="#BDBDBD" />
-                </TouchableOpacity>
-                <Text style={styles.commentsCount}>
-                  {commentsCount[item.id] || 0}
-                </Text>
+              <View>
+                <Text style={styles.title}>{item.comment}</Text>
               </View>
 
-              <View style={styles.wrapperLocation}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("MapScreen", {
-                      location: item.location,
-                    })
-                  }
-                >
-                  <Ionicons name="location-outline" size={24} color="#BDBDBD" />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("MapScreen", {
-                      location: item.location,
-                    })
-                  }
-                >
-                  <Text style={styles.locationName}>{item.locationName}</Text>
-                </TouchableOpacity>
+              <View style={styles.box}>
+                <View style={styles.commentWrapper}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("Комментарии", {
+                        prevScreen: "Home",
+                        postId: item.id,
+                        photo: item.photo,
+                      })
+                    }
+                  >
+                    <Feather name="message-circle" size={24} color="#BDBDBD" />
+                  </TouchableOpacity>
+                  <Text style={styles.commentsCount}>
+                    {commentsCount[item.id] || 0}
+                  </Text>
+                </View>
+
+                <View style={styles.wrapperLocation}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("MapScreen", {
+                        location: item.location,
+                      })
+                    }
+                  >
+                    <Ionicons
+                      name="location-outline"
+                      size={24}
+                      color="#BDBDBD"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("MapScreen", {
+                        location: item.location,
+                      })
+                    }
+                  >
+                    <Text style={styles.locationName}>{item.locationName}</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
-        )}
-      />
+          )}
+        />
+      )}
     </View>
   );
 };
@@ -264,5 +280,21 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     color: "#212121",
     textDecorationLine: "underline",
+  },
+  textWrapper: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 20,
+    paddingBottom: 20,
+    marginBottom: 32,
+  },
+  text: {
+    fontFamily: "RobotoRegular",
+    fontStyle: "normal",
+    fontSize: 16,
+    color: "#b1aaaa",
+    marginBottom: 12,
   },
 });

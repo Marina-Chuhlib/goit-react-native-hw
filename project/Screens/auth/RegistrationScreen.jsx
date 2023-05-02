@@ -82,7 +82,7 @@ const RegistrationScreen = ({ navigation }) => {
       const file = await response.blob();
       const uniquePostId = Date.now().toString();
 
-      const storageRef = ref(storage, `profileAvatar/${uniquePostId}`);
+      const storageRef = await ref(storage, `profileAvatar/${uniquePostId}`);
       console.log(storageRef, "storageRef");
 
       uploadBytesResumable(storageRef, file);
@@ -96,32 +96,65 @@ const RegistrationScreen = ({ navigation }) => {
     }
   };
 
-  const handleSubmit = async () => {
-    setIsShowKeyboard(false);
-    Keyboard.dismiss();
+  async function handleSubmit() {
+    try {
+      setIsShowKeyboard(false);
+      Keyboard.dismiss();
 
-    console.log("handleSubmit");
+      console.log("handleSubmit");
 
-    const avatar = photo ? await uploadPhotoToServer() : null;
-    console.log(avatar, "storageRef");
+      // const avatar = photo ? await uploadPhotoToServer() : null;
+      const avatar = await uploadPhotoToServer();
+      console.log(avatar, "storageRef");
 
-    const user = {
-      userName: state.userName,
-      email: state.email,
-      password: state.password,
-      photo: avatar,
-    };
+      const user = {
+        userName: state.userName,
+        email: state.email,
+        password: state.password,
+        photo: avatar,
+      };
 
-    console.log(user, "user");
+      console.log(user, "user");
 
-    dispatch(authSignUpUser(user));
+      dispatch(authSignUpUser(user));
 
-    // navigation.navigate("Home");
-    // setState({ userName: "", email: "", password: "" });
+      // navigation.navigate("Home");
+      // setState({ userName: "", email: "", password: "" });
 
-    // setState(initialState);
-    // setPhoto(null);
-  };
+      // setState(initialState);
+      // setPhoto(null);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  // const handleSubmit = async () => {
+  //   setIsShowKeyboard(false);
+  //   Keyboard.dismiss();
+
+  //   console.log("handleSubmit");
+
+  //   // const avatar = photo ? await uploadPhotoToServer() : null;
+  //   const avatar = await uploadPhotoToServer()
+  //   console.log(avatar, "storageRef");
+
+  //   const user = {
+  //     userName: state.userName,
+  //     email: state.email,
+  //     password: state.password,
+  //     photo: avatar,
+  //   };
+
+  //   console.log(user, "user");
+
+  //   dispatch(authSignUpUser(user));
+
+  //   // navigation.navigate("Home");
+  //   // setState({ userName: "", email: "", password: "" });
+
+  //   // setState(initialState);
+  //   // setPhoto(null);
+  // };
 
   return (
     <TouchableWithoutFeedback onPress={handleSubmit}>
@@ -427,4 +460,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#1B4371",
   },
+
 });
