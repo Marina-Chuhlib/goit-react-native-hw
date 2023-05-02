@@ -27,7 +27,8 @@ import { AntDesign } from "@expo/vector-icons";
 const db = getFirestore(app);
 
 const CommentsScreen = ({ route, navigation }) => {
-  const { postId, photo } = route.params;
+  const { postId, photo, prevScreen } = route.params;
+  // console.log(prevScreen);
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
   const [commentsCount, setCommentsCount] = useState(0);
@@ -36,6 +37,7 @@ const CommentsScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     getAllPosts();
+    console.log(allComments);
   }, []);
 
   useEffect(() => {
@@ -56,7 +58,6 @@ const CommentsScreen = ({ route, navigation }) => {
     });
 
     setComment("");
-    
   };
 
   const getAllPosts = async () => {
@@ -92,6 +93,23 @@ const CommentsScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+      {/* <View>
+         <TouchableOpacity
+          //     onPress={
+          //     //   () =>
+          //     // navigation.goBack()
+          //     navigation.navigate('Home') 
+          // //  navigation.dispatch(CommonActions.goBack())
+          // }
+        >
+              <Feather
+                name="arrow-left"
+                size={24}
+                color="#212121"
+                style={{ marginLeft: 16 }}
+              />
+            </TouchableOpacity>
+      </View> */}
       <View style={styles.postWrapper}>
         <Image source={{ uri: photo }} style={styles.post} />
         <SafeAreaView style={styles.wrapper}>
@@ -139,9 +157,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   wrapper: {
-    // borderColor: "red",
-    // borderWidth: 1,
     height: 280,
+    alignItems: "flex-end",
+
+    // borderWidth: 1,
+    // borderColor: "red",
   },
   commentContainer: {
     padding: 16,
@@ -149,16 +169,20 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     backgroundColor: "rgba(0, 0, 0, 0.03)",
     borderColor: "rgba(0, 0, 0, 0.03)",
-    borderWidth: 1,
+    width: 299,
+
+    //  alignItems: "flex-end",
   },
+
   post: {
     height: 240,
     width: "100%",
     borderRadius: 8,
     marginBottom: 32,
+    marginTop: 32,
   },
   input: {
-    marginBottom: 16,
+    marginBottom: 33,
     padding: 16,
     height: 50,
     fontFamily: "RobotoRegular",

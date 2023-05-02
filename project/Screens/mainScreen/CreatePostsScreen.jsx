@@ -70,13 +70,13 @@ const CreatePostsScreen = ({ navigation }) => {
 
     const uniquePostId = Date.now().toString();
     const storageRef = ref(storage, `postImage/${uniquePostId}`);
-    console.log(storageRef, "storageRef PROff");
+    // console.log(storageRef, "storageRef PROff");
 
     const data = await uploadBytes(storageRef, file);
-    console.log(data, "data");
+    // console.log(data, "data");
 
     const getStorageRef = await getDownloadURL(storageRef);
-    console.log(getStorageRef, "getStorageRef");
+    // console.log(getStorageRef, "getStorageRef");
 
     return getStorageRef;
   };
@@ -110,7 +110,7 @@ const CreatePostsScreen = ({ navigation }) => {
     }
     uploadPostToServer();
     removeFields();
-    navigation.navigate("PostsScreen");
+    navigation.navigate("Home");
   };
 
   const deletePhoto = () => {

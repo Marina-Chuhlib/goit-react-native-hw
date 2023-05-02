@@ -30,11 +30,10 @@ const db = getFirestore(app);
 const ProfileScreen = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
-   const [commentsCount, setCommentsCount] = useState({});
+  const [commentsCount, setCommentsCount] = useState({});
   const { userId, userName, email } = useSelector((state) => state.auth);
 
-  console.log("ProfileScreen")
-
+  console.log("ProfileScreen");
 
   const getAllPost = async () => {
     try {
@@ -107,6 +106,7 @@ const ProfileScreen = ({ navigation, route }) => {
     }
   };
 
+
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -126,64 +126,78 @@ const ProfileScreen = ({ navigation, route }) => {
               {/* <Text style={styles.email}>{userEmail}</Text> */}
             </View>
           </View>
-          <View style={styles.postsList}>
-            <FlatList
-              data={userPosts}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <View>
-                  <Image source={{ uri: item.photo }} style={styles.post} />
+          {userPosts.length === 0 ? (
+            <View style={styles.textWrapper}>
+              <Text style={styles.text}>У вас нет публикаций</Text>
+                   <TouchableOpacity onPress={() => navigation.navigate("Создать публикацию")}>
+                  <Text style={styles.aside}>Создать публикацию?</Text>
+                </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.postsList}>
+              <FlatList
+                data={userPosts}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
                   <View>
-                    <Text style={styles.title}>{item.comment}</Text>
-                  </View>
-                  <View style={styles.box}>
-                    <View style={styles.commentWrapper}>
-                      <TouchableOpacity
-                        onPress={() =>
-                          navigation.navigate("Комментарии", {
-                            postId: item.id,
-                             photo: item.photo,
-                          })
-                        }
-                      >
-                        <FontAwesome name="comment" size={24} color="#FF6C00" />
-                      </TouchableOpacity>
-                      <Text style={styles.commentsCount}>
-                        {commentsCount[item.id] || 0}
-                      </Text>
+                    <Image source={{ uri: item.photo }} style={styles.post} />
+                    <View>
+                      <Text style={styles.title}>{item.comment}</Text>
                     </View>
-
-                    <View style={styles.wrapperLocation}>
-                      <TouchableOpacity
-                        onPress={() =>
-                          navigation.navigate("MapScreen", {
-                            location: item.location,
-                          })
-                        }
-                      >
-                        <Ionicons
-                          name="location-outline"
-                          size={24}
-                          color="#BDBDBD"
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() =>
-                          navigation.navigate("MapScreen", {
-                            location: item.location,
-                          })
-                        }
-                      >
-                        <Text style={styles.locationName}>
-                          {item.locationName}
+                    <View style={styles.box}>
+                      <View style={styles.commentWrapper}>
+                        <TouchableOpacity
+                          onPress={() =>
+                            navigation.navigate("Комментарии", {
+                              prevScreen: "Профиль",
+                              postId: item.id,
+                              photo: item.photo,
+                            })
+                          }
+                        >
+                          <FontAwesome
+                            name="comment"
+                            size={24}
+                            color="#FF6C00"
+                          />
+                        </TouchableOpacity>
+                        <Text style={styles.commentsCount}>
+                          {commentsCount[item.id] || 0}
                         </Text>
-                      </TouchableOpacity>
+                      </View>
+
+                      <View style={styles.wrapperLocation}>
+                        <TouchableOpacity
+                          onPress={() =>
+                            navigation.navigate("MapScreen", {
+                              location: item.location,
+                            })
+                          }
+                        >
+                          <Ionicons
+                            name="location-outline"
+                            size={24}
+                            color="#BDBDBD"
+                          />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={() =>
+                            navigation.navigate("MapScreen", {
+                              location: item.location,
+                            })
+                          }
+                        >
+                          <Text style={styles.locationName}>
+                            {item.locationName}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
                     </View>
                   </View>
-                </View>
-              )}
-            />
-          </View>
+                )}
+              />
+            </View>
+          )}
         </View>
       </ImageBackground>
     </View>
@@ -201,8 +215,8 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     justifyContent: "flex-end",
 
-      //  borderColor: "red",
-      // borderWidth: 1,
+    //  borderColor: "red",
+    // borderWidth: 1,
   },
   wrapper: {
     marginTop: 250,
@@ -261,7 +275,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 32,
- 
   },
 
   title: {
@@ -273,7 +286,7 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     color: "#212121",
   },
-    commentWrapper: {
+  commentWrapper: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
@@ -308,5 +321,20 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     color: "#212121",
     textDecorationLine: "underline",
+  },
+  textWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems:"center",
+    paddingTop: 20,
+    paddingBottom: 20,
+    marginBottom: 32,
+  },
+  text: {
+    fontFamily: "RobotoRegular",
+    fontStyle: "normal",
+    fontSize: 16,
+    color: "#b1aaaa",
+    marginBottom:12,
   },
 });

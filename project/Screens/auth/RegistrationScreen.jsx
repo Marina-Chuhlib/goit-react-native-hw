@@ -20,7 +20,13 @@ import * as ImagePicker from "expo-image-picker";
 import db from "../../firebase/config";
 const storage = getStorage(db);
 
-import { uploadBytes,uploadBytesResumable, ref, getDownloadURL, getStorage } from "firebase/storage";
+import {
+  uploadBytes,
+  uploadBytesResumable,
+  ref,
+  getDownloadURL,
+  getStorage,
+} from "firebase/storage";
 
 import { authSignUpUser } from "../../redux/auth/authOperations";
 
@@ -77,15 +83,12 @@ const RegistrationScreen = ({ navigation }) => {
       const uniquePostId = Date.now().toString();
 
       const storageRef = ref(storage, `profileAvatar/${uniquePostId}`);
-      console.log(storageRef, "storageRef")
+      console.log(storageRef, "storageRef");
 
-      // const data = await uploadBytes(storageRef, file);
-      // console.log(data, "data");
-
-      const data = await uploadBytesResumable(storageRef, file)
+      uploadBytesResumable(storageRef, file);
 
       const getStorageRef = await getDownloadURL(storageRef);
-      console.log(getStorageRef, "getStorageRef");
+      // console.log(getStorageRef, "getStorageRef");
 
       return getStorageRef;
     } catch (error) {
@@ -99,9 +102,8 @@ const RegistrationScreen = ({ navigation }) => {
 
     console.log("handleSubmit");
 
-    // const avatar = photo ? await uploadPhotoToServer() : null;
-    const avatar = await uploadPhotoToServer();
-    console.log(avatar, "avatar");
+    const avatar = photo ? await uploadPhotoToServer() : null;
+    console.log(avatar, "storageRef");
 
     const user = {
       userName: state.userName,
@@ -110,13 +112,15 @@ const RegistrationScreen = ({ navigation }) => {
       photo: avatar,
     };
 
+    console.log(user, "user");
+
     dispatch(authSignUpUser(user));
 
-    navigation.navigate("Home");
+    // navigation.navigate("Home");
     // setState({ userName: "", email: "", password: "" });
 
     // setState(initialState);
-    setPhoto(null);
+    // setPhoto(null);
   };
 
   return (

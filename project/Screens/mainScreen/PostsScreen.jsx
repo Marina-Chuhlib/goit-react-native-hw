@@ -35,20 +35,20 @@ const PostsScreen = ({ navigation, route }) => {
 
   const getAllPost = async () => {
     try {
-      const userPostsRef = collection(db, "posts");
-      const queryRef = query(userPostsRef, where("userId", "==", userId));
-      await onSnapshot(queryRef, (querySnapshot) => {
-        const userPosts = querySnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }));
-        setPosts(userPosts);
-      });
-      return () => unsubscribe();
-
-      //  onSnapshot(collection(db, "posts"), (snapshots) => {
-      //   setPosts(snapshots.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      // const userPostsRef = collection(db, "posts");
+      // const queryRef = query(userPostsRef, where("userId", "==", userId));
+      // await onSnapshot(queryRef, (querySnapshot) => {
+      //   const userPosts = querySnapshot.docs.map((doc) => ({
+      //     ...doc.data(),
+      //     id: doc.id,
+      //   }));
+      //   setPosts(userPosts);
       // });
+      // // return () => unsubscribe();
+
+       onSnapshot(collection(db, "posts"), (snapshots) => {
+        setPosts(snapshots.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      });
     } catch (error) {
       console.log(error.massage);
       Alert.alert("Try again");
@@ -119,8 +119,10 @@ const PostsScreen = ({ navigation, route }) => {
                 <TouchableOpacity
                   onPress={() =>
                     navigation.navigate("Комментарии", {
+                      prevScreen: 'Home' ,
                       postId: item.id,
                       photo: item.photo,
+                   
                     })
                   }
                 >
