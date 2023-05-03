@@ -93,33 +93,22 @@ const CommentsScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* <View>
-         <TouchableOpacity
-          //     onPress={
-          //     //   () =>
-          //     // navigation.goBack()
-          //     navigation.navigate('Home') 
-          // //  navigation.dispatch(CommonActions.goBack())
-          // }
-        >
-              <Feather
-                name="arrow-left"
-                size={24}
-                color="#212121"
-                style={{ marginLeft: 16 }}
-              />
-            </TouchableOpacity>
-      </View> */}
       <View style={styles.postWrapper}>
         <Image source={{ uri: photo }} style={styles.post} />
         <SafeAreaView style={styles.wrapper}>
           <FlatList
             data={allComments}
             renderItem={({ item }) => (
-              <View style={styles.commentContainer}>
-                <Text style={styles.userName}>{item.userName}</Text>
-                <Text>{item.comment}</Text>
-                {/* <Text>{item.postDate}</Text> */}
+              <View style={styles.wrapperComment}>
+                <Image
+                  style={styles.avatar}
+                  source={require("../../assets/image/avatar.png")}
+                />
+                <View style={styles.commentContainer}>
+                  <Text style={styles.userName}>{item.userName}</Text>
+                  <Text>{item.comment}</Text>
+                  {/* <Text>{item.postDate}</Text> */}
+                </View>
               </View>
             )}
             keyExtractor={(item) => item.id}
@@ -155,13 +144,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: "space-between",
     paddingHorizontal: 15,
+    paddingTop: 32,
   },
   wrapper: {
-    height: 280,
+    height: 350,
     alignItems: "flex-end",
-
-    // borderWidth: 1,
-    // borderColor: "red",
+  },
+  wrapperComment: {
+    display: "flex",
+    flexDirection: "row",
   },
   commentContainer: {
     padding: 16,
@@ -173,16 +164,22 @@ const styles = StyleSheet.create({
 
     //  alignItems: "flex-end",
   },
+  avatar: {
+    width: 28,
+    height: 28,
+    borderRadius: 50,
+    marginRight: 16,
+  },
 
   post: {
     height: 240,
     width: "100%",
     borderRadius: 8,
     marginBottom: 32,
-    marginTop: 32,
+    paddingTop: 32,
   },
   input: {
-    marginBottom: 33,
+    marginBottom: 35,
     padding: 16,
     height: 50,
     fontFamily: "RobotoRegular",
@@ -196,6 +193,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8E8E8",
   },
+
   userName: {
     fontFamily: "RobotoRegular",
     fontStyle: "normal",
@@ -206,7 +204,7 @@ const styles = StyleSheet.create({
   button: {
     position: "absolute",
     left: "84%",
-    top: "85.5%",
+    top: "89%",
     marginHorizontal: 25,
     marginTop: 32,
     marginBottom: 30,

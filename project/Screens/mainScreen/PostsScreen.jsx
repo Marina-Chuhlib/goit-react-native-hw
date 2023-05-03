@@ -20,7 +20,6 @@ import {
   collection,
   onSnapshot,
   query,
-  where,
 } from "firebase/firestore";
 
 const db = getFirestore(app);
@@ -29,23 +28,12 @@ const PostsScreen = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
   const [commentsCount, setCommentsCount] = useState({});
 
-  const { userName, userEmail, userId, photo } = useSelector(
+  const { userName, userEmail, photo } = useSelector(
     (state) => state.auth
   );
 
   const getAllPost = async () => {
     try {
-      // const userPostsRef = collection(db, "posts");
-      // const queryRef = query(userPostsRef, where("userId", "==", userId));
-      // await onSnapshot(queryRef, (querySnapshot) => {
-      //   const userPosts = querySnapshot.docs.map((doc) => ({
-      //     ...doc.data(),
-      //     id: doc.id,
-      //   }));
-      //   setPosts(userPosts);
-      // });
-      // // return () => unsubscribe();
-
       onSnapshot(collection(db, "posts"), (snapshots) => {
         setPosts(snapshots.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       });
@@ -54,6 +42,7 @@ const PostsScreen = ({ navigation, route }) => {
       Alert.alert("Try again");
     }
   };
+
 
   useEffect(() => {
     getAllPost();
@@ -79,6 +68,7 @@ const PostsScreen = ({ navigation, route }) => {
         const commentsCount = querySnapshot.docs.length;
         setCommentsCount((prev) => ({ ...prev, [postId]: commentsCount }));
       });
+      console.log(commentsCount,"commentsCount")
       return () => unsubscribe();
     } catch (error) {
       console.log(error);

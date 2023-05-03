@@ -68,7 +68,7 @@ export const authSignInUser =
 export const authStateCahngeUser = () => async (dispatch, getState) => {
   try {
     await onAuthStateChanged(auth, (user) => {
-      console.log(user);
+      // console.log(user);
       if (user) {
         const userUpdateProfile = {
           userName: user.displayName,
