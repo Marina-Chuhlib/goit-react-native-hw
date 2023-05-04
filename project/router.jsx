@@ -41,7 +41,6 @@ export function HomeTabs() {
     <Tabs.Navigator
       initialRouteName="Home"
       screenOptions={{
-       
         tabBarShowLabel: false,
         tabBarShowIcon: true,
         tabBarItemStyle: {

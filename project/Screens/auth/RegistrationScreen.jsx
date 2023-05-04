@@ -41,6 +41,8 @@ const RegistrationScreen = ({ navigation }) => {
   // console.log(Platform.OS);
   const [photo, setPhoto] = useState(null);
 
+  // console.log(storage)
+
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
   const [isFocusInput, setIsFocusInput] = useState({
@@ -82,13 +84,15 @@ const RegistrationScreen = ({ navigation }) => {
       const file = await response.blob();
       const uniquePostId = Date.now().toString();
 
+      // const storageRef = ref(storage, `avatar/${uniquePostId}`);
       const storageRef = await ref(storage, `profileAvatar/${uniquePostId}`);
       console.log(storageRef, "storageRef");
 
-      uploadBytesResumable(storageRef, file);
+      // const data = uploadBytesResumable(storageRef, file);
+   uploadBytes(storageRef, file);
 
       const getStorageRef = await getDownloadURL(storageRef);
-      // console.log(getStorageRef, "getStorageRef");
+      console.log(getStorageRef, "getStorageRef");
 
       return getStorageRef;
     } catch (error) {
@@ -104,8 +108,7 @@ const RegistrationScreen = ({ navigation }) => {
       console.log("handleSubmit");
 
       // const avatar = photo ? await uploadPhotoToServer() : null;
-      const avatar = await uploadPhotoToServer();
-      console.log(avatar, "storageRef");
+       const avatar =  await uploadPhotoToServer() 
 
       const user = {
         userName: state.userName,
@@ -114,15 +117,13 @@ const RegistrationScreen = ({ navigation }) => {
         photo: avatar,
       };
 
-      console.log(user, "user");
-
       dispatch(authSignUpUser(user));
 
       // navigation.navigate("Home");
       // setState({ userName: "", email: "", password: "" });
 
-      // setState(initialState);
-      // setPhoto(null);
+      setState(initialState);
+      setPhoto(null);
     } catch (error) {
       console.log(error);
     }
@@ -460,5 +461,4 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#1B4371",
   },
-
 });

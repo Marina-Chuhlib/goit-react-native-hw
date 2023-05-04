@@ -22,7 +22,7 @@ export const authSignUpUser =
       await createUserWithEmailAndPassword(auth, email, password);
 
       const user = await auth.currentUser;
-      console.log(user);
+      console.log(user.photoURL);
 
       const { displayName, uid, photoURL } = await auth.currentUser;
 
@@ -31,21 +31,21 @@ export const authSignUpUser =
         photoURL: photo,
       });
 
-      const userUpdateProfile = {
-        userId: uid,
-        userName: userName,
-        userEmail: email,
-        photo: photoURL,
-      };
+      // const userUpdateProfile = {
+      //   userId: uid,
+      //   userName: userName,
+      //   userEmail: email,
+      //   photo: photoURL,
+      // };
 
-      // dispatch(
-      //   authSlice.actions.updateUserProfile({
-      //     userId: uid,
-      //     userName: userName,
-      //     userEmail: email,
-      //     photo: photoURL,
-      //   })
-      // );
+      dispatch(
+        authSlice.actions.updateUserProfile({
+          userId: uid,
+          userName: userName,
+          userEmail: email,
+          photo: photoURL,
+        })
+      );
 
       dispatch(updateUserProfile(userUpdateProfile));
     } catch (error) {

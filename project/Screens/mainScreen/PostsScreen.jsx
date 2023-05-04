@@ -28,14 +28,20 @@ const PostsScreen = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
   const [commentsCount, setCommentsCount] = useState({});
 
-  const { userName, userEmail, photo } = useSelector(
-    (state) => state.auth
-  );
+  const { userName, userEmail, photo } = useSelector((state) => state.auth);
 
   const getAllPost = async () => {
     try {
-      onSnapshot(collection(db, "posts"), (snapshots) => {
-        setPosts(snapshots.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      await onSnapshot(collection(db, "posts"), (data) => {
+        const posts = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+        setPosts(posts);
+
+        // onSnapshot(collection(db, "posts"), (snapshots) => {
+        //   setPosts(snapshots.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+
+        posts.forEach((post) => {
+          getCommentsCount(post.id);
+        });
       });
     } catch (error) {
       console.log(error.massage);
@@ -43,12 +49,8 @@ const PostsScreen = ({ navigation, route }) => {
     }
   };
 
-
   useEffect(() => {
     getAllPost();
-    posts.forEach((post) => {
-      getCommentsCount(post.id);
-    });
   }, []);
 
   useEffect(() => {
@@ -68,7 +70,6 @@ const PostsScreen = ({ navigation, route }) => {
         const commentsCount = querySnapshot.docs.length;
         setCommentsCount((prev) => ({ ...prev, [postId]: commentsCount }));
       });
-      console.log(commentsCount,"commentsCount")
       return () => unsubscribe();
     } catch (error) {
       console.log(error);
@@ -76,15 +77,14 @@ const PostsScreen = ({ navigation, route }) => {
     }
   };
 
-
   return (
     <View style={styles.container}>
       <View style={styles.userInfo}>
         <View style={styles.imgBox}>
           <Image
             style={styles.avatar}
-            source={require("../../assets/image/avatar.png")}
-            // source={photo}
+            // source={require("../../assets/image/avatar.png")}
+            source={{ uri: photo }}
           />
         </View>
         <View style={styles.user}>
@@ -187,6 +187,7 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: "#E8E8E8",
     marginRight: 8,
+       borderRadius: 16,
   },
   avatar: {
     width: 60,

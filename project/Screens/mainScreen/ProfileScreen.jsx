@@ -28,13 +28,11 @@ import {
 
 const db = getFirestore(app);
 
-
-
 const ProfileScreen = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
   const [commentsCount, setCommentsCount] = useState({});
-  const { userId, userName } = useSelector((state) => state.auth);
+  const { userId, userName, photo } = useSelector((state) => state.auth);
 
 
   const getAllPost = async () => {
@@ -57,6 +55,7 @@ const ProfileScreen = ({ navigation, route }) => {
 
   useEffect(() => {
     if (route.params?.commentsCount) {
+      console.log(route.params);
       setCommentsCount((prev) => ({
         ...prev,
         [route.params.postId]: route.params.commentsCount,
@@ -71,7 +70,6 @@ const ProfileScreen = ({ navigation, route }) => {
       const unsubscribe = onSnapshot(queryRef, (querySnapshot) => {
         const commentsCount = querySnapshot.docs.length;
         setCommentsCount((prev) => ({ ...prev, [postId]: commentsCount }));
-        // console.log("PostId", postId);
       });
       return () => unsubscribe();
     } catch (error) {
@@ -120,7 +118,8 @@ const ProfileScreen = ({ navigation, route }) => {
               <View style={styles.imgBox}>
                 <Image
                   style={styles.avatar}
-                  source={require("../../assets/image/avatar.png")}
+                  // source={require("../../assets/image/avatar.png")}
+                  source={{ uri: photo }}
                 />
               </View>
               <View style={styles.user}>
@@ -227,7 +226,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
 
-    minHeight:436,
+    minHeight: 436,
     // borderColor: "red",
     // borderWidth: 1,
   },
@@ -255,6 +254,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: "100%",
     height: "100%",
+    borderRadius: 16,
   },
   name: {
     fontFamily: "RobotoMedium",

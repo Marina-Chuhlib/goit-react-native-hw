@@ -12,6 +12,9 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  ScrollView,
 } from "react-native";
 
 import { FontAwesome, Ionicons, Feather } from "@expo/vector-icons";
@@ -26,6 +29,7 @@ const storage = getStorage(db);
 const cloudDB = getFirestore(app);
 
 const CreatePostsScreen = ({ navigation }) => {
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [cameraRef, setCameraRef] = useState(null);
   const [photo, setPhoto] = useState("");
   const [comment, setComment] = useState("");
@@ -33,6 +37,11 @@ const CreatePostsScreen = ({ navigation }) => {
   const [locationName, setLocationName] = useState("");
 
   const { userId, userName } = useSelector((state) => state.auth);
+
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+  };
 
   useEffect(() => {
     (async () => {
@@ -70,10 +79,8 @@ const CreatePostsScreen = ({ navigation }) => {
 
     const uniquePostId = Date.now().toString();
     const storageRef = ref(storage, `postImage/${uniquePostId}`);
-    // console.log(storageRef, "storageRef PROff");
 
     const data = await uploadBytes(storageRef, file);
-    // console.log(data, "data");
 
     const getStorageRef = await getDownloadURL(storageRef);
     // console.log(getStorageRef, "getStorageRef");
@@ -117,87 +124,111 @@ const CreatePostsScreen = ({ navigation }) => {
     removeFields();
   };
 
-  // let text = "Waiting..";
-  // if (errorMsg) {
-  //   text = errorMsg;
-  // } else if (location) {
-  //   text = JSON.stringify(location);
-  // }
-
   return (
     <>
       <View style={styles.container}>
-        <Camera style={styles.camera} ref={setCameraRef}>
-          {photo && (
-            <View style={styles.previewPhotoContainer}>
-              <Image
-                source={{ uri: photo }}
-                style={{ height: 100, width: 100 }}
-              />
-            </View>
-          )}
-          <TouchableOpacity style={styles.icon} onPress={takePhoto}>
-            <FontAwesome name="camera" size={20} color="#BDBDBD" />
-          </TouchableOpacity>
-        </Camera>
-        {photo ? (
-          <Text style={styles.text}>Редактировать фото</Text>
-        ) : (
-          <Text style={styles.text}>Загрузите фото</Text>
-        )}
-        <View>
-          <TextInput
-            placeholderTextColor={"#BDBDBD"}
-            placeholder="Название..."
-            style={styles.input}
-            value={comment}
-            onChangeText={(value) => setComment(value)}
-          ></TextInput>
-
-          <TextInput
-            placeholderTextColor={"#BDBDBD"}
-            placeholder="Местность..."
-            style={styles.inputLocation}
-            value={locationName}
-            onChangeText={(value) => setLocationName(value)}
-          ></TextInput>
-          <TouchableOpacity
-            style={styles.locationBtn}
-            onPress={() =>
-              navigation.navigate("MapScreen", {
-                location: location.coords,
-              })
-            }
-          >
-            <Ionicons name="location-outline" size={24} color="#BDBDBD" />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.tabBarWrapper}></View>
-        {photo ? (
-          <TouchableOpacity
-            style={styles.buttonActive}
-            activeOpacity={0.8}
-            onPress={sendPhoto}
-          >
-            <Text style={styles.buttonTextActive}>Опубликовать</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={styles.button}
-            activeOpacity={0.8}
-            onPress={sendPhoto}
-          >
-            <Text style={styles.buttonText}>Опубликовать</Text>
-          </TouchableOpacity>
-        )}
-
-        <TouchableOpacity
-          style={styles.deleteBtn}
-          activeOpacity={0.8}
-          onPress={deletePhoto}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
         >
-          <Feather name="trash-2" size={24} color="#BDBDBD" />
-        </TouchableOpacity>
+          <View
+            style={{
+              ...styles.postWrapper,
+
+              marginBottom: isShowKeyboard ? 100 : 0,
+            }}
+          >
+            <ScrollView>
+              <Camera style={styles.camera} ref={setCameraRef}>
+                {photo && (
+                  <View style={styles.previewPhotoContainer}>
+                    <Image
+                      source={{ uri: photo }}
+                      style={{ height: 100, width: 100 }}
+                    />
+                  </View>
+                )}
+                <TouchableOpacity style={styles.icon} onPress={takePhoto}>
+                  <FontAwesome name="camera" size={20} color="#BDBDBD" />
+                </TouchableOpacity>
+              </Camera>
+              {photo ? (
+                <Text style={styles.text}>Редактировать фото</Text>
+              ) : (
+                <Text style={styles.text}>Загрузите фото</Text>
+              )}
+              <View>
+                <TextInput
+                  placeholderTextColor={"#BDBDBD"}
+                  placeholder="Название..."
+                  style={styles.input}
+                  value={comment}
+                  onChangeText={(value) => setComment(value)}
+                  onBlur={keyboardHide}
+                  onFocus={() => setIsShowKeyboard(true)}
+                ></TextInput>
+
+                <TextInput
+                  placeholderTextColor={"#BDBDBD"}
+                  placeholder="Местность..."
+                  style={styles.inputLocation}
+                  value={locationName}
+                  onChangeText={(value) => setLocationName(value)}
+                  onBlur={keyboardHide}
+                  onFocus={() => setIsShowKeyboard(true)}
+                ></TextInput>
+                <TouchableOpacity
+                  style={styles.locationBtn}
+                  onPress={() =>
+                    navigation.navigate("MapScreen", {
+                      location: location.coords,
+                    })
+                  }
+                >
+                  <Ionicons name="location-outline" size={24} color="#BDBDBD" />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.tabBarWrapper}></View>
+              {photo ? (
+                <TouchableOpacity
+                  // style={styles.buttonActive}
+                  style={{
+                    ...styles.buttonActive,
+                    marginTop: isShowKeyboard ? 30 : 120,
+                  }}
+                  activeOpacity={0.8}
+                  onPress={sendPhoto}
+                >
+                  <Text style={styles.buttonTextActive}>Опубликовать</Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  // style={styles.button}
+                  style={{
+                    ...styles.button,
+                    marginTop: isShowKeyboard ? 30 : 120,
+                  }}
+                  activeOpacity={0.8}
+                  onPress={sendPhoto}
+                >
+                  <Text style={styles.buttonText}>Опубликовать</Text>
+                </TouchableOpacity>
+              )}
+
+              <TouchableOpacity
+                // style={styles.deleteBtn}
+                style={{
+                  ...styles.deleteBtn,
+                  marginTop: isShowKeyboard ? 20 : 50,
+                  marginBottom: isShowKeyboard ? 30 : 0,
+                }}
+                activeOpacity={0.8}
+                onPress={deletePhoto}
+              >
+                <Feather name="trash-2" size={24} color="#BDBDBD" />
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        </KeyboardAvoidingView>
       </View>
     </>
   );
@@ -216,6 +247,10 @@ const styles = StyleSheet.create({
     left: 15,
     top: -15,
     zIndex: 9,
+  },
+  postWrapper: {
+    borderColor: "red",
+    borderWidth: 2,
   },
   camera: {
     height: 240,
@@ -305,7 +340,7 @@ const styles = StyleSheet.create({
     height: 25,
   },
   button: {
-    marginTop: 32,
+    // marginTop: 120,
     backgroundColor: "#F6F6F6",
     fontFamily: "RobotoRegular",
     fontStyle: "normal",
@@ -332,7 +367,6 @@ const styles = StyleSheet.create({
     color: "#fff",
   },
   deleteBtn: {
-    marginTop: 120,
     justifyContent: "center",
     alignItems: "center",
     marginLeft: "auto",
