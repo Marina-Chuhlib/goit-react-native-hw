@@ -11,7 +11,6 @@ import {
   FlatList,
   Image,
   Alert,
-  TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
   ScrollView,
@@ -213,10 +212,6 @@ const styles = StyleSheet.create({
 
     // borderColor: "red",
     // borderWidth: 1,
-  },
-  postWrapper: {
-    // borderColor: "red",
-    // borderWidth: 2,
   },
   wrapper: {
     height: 350,

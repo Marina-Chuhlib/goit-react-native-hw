@@ -248,10 +248,6 @@ const styles = StyleSheet.create({
     top: -15,
     zIndex: 9,
   },
-  postWrapper: {
-    borderColor: "red",
-    borderWidth: 2,
-  },
   camera: {
     height: 240,
     borderRadius: 8,
