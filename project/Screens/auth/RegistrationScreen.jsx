@@ -16,6 +16,8 @@ import {
 
 import { useDispatch } from "react-redux";
 
+import AnimatedLoader from "react-native-animated-loader";
+
 import * as ImagePicker from "expo-image-picker";
 
 import db from "../../firebase/config";
@@ -41,7 +43,7 @@ const initialState = {
 const RegistrationScreen = ({ navigation }) => {
   // console.log(Platform.OS);
   const [photo, setPhoto] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
@@ -53,6 +55,12 @@ const RegistrationScreen = ({ navigation }) => {
   const [isShowPassword, setIsShowPassword] = useState(true);
 
   const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     setVisible(!visible);
+  //   }, 2000);
+  // }, []);
 
   const handleAddImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -90,7 +98,7 @@ const RegistrationScreen = ({ navigation }) => {
       );
 
       // uploadBytesResumable(storageRef, file);
-      await uploadBytes(storageRef, file);
+       uploadBytes(storageRef, file);
 
       const getStorageRef = await getDownloadURL(storageRef);
       // console.log(getStorageRef, "getStorageRef");
@@ -106,6 +114,7 @@ const RegistrationScreen = ({ navigation }) => {
       setIsShowKeyboard(false);
       Keyboard.dismiss();
 
+      setVisible(true);
       const avatar = photo ? await uploadPhotoToServer() : null;
       // const avatar = await uploadPhotoToServer();
 
@@ -121,6 +130,7 @@ const RegistrationScreen = ({ navigation }) => {
 
       setState(initialState);
       setPhoto(null);
+      setVisible(false);
     } catch (error) {
       console.log(error);
     }
@@ -136,6 +146,17 @@ const RegistrationScreen = ({ navigation }) => {
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
+            {visible && (
+              <AnimatedLoader
+                visible={visible}
+                overlayColor="rgba(255,255,255,0.75)"
+                animationStyle={styles.lottie}
+                speed={1}
+              >
+                <Text>Загрузка...</Text>
+              </AnimatedLoader>
+            )}
+
             <View
               style={{
                 ...styles.formWrapper,
@@ -336,6 +357,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     justifyContent: "flex-end",
   },
+  lottie: { width: 100, height: 100 },
   formWrapper: {
     paddingTop: 92,
     paddingLeft: 16,
