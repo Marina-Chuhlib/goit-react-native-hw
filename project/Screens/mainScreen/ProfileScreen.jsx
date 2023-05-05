@@ -34,7 +34,6 @@ const ProfileScreen = ({ navigation, route }) => {
   const [commentsCount, setCommentsCount] = useState({});
   const { userId, userName, photo } = useSelector((state) => state.auth);
 
-
   const getAllPost = async () => {
     try {
       onSnapshot(collection(db, "posts"), (data) => {
@@ -243,13 +242,16 @@ const styles = StyleSheet.create({
   },
   imgBox: {
     position: "absolute",
-    left: "35%",
+    left: "32%",
     top: "-100%",
     width: 120,
     height: 120,
     backgroundColor: "#E8E8E8",
     marginRight: 8,
     borderRadius: 16,
+
+    //    borderColor: "red",
+    // borderWidth: 2,
   },
   avatar: {
     width: "100%",

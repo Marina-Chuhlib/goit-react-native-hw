@@ -44,14 +44,25 @@ const CreatePostsScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
+    const requestCameraPermission = async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Camera permission denied");
+      } else {
+        console.log("Camera permission granted");
+      }
+    };
+
     (async () => {
-      let { status } = await Location.requestPermissionsAsync();
+      let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Permission to access location was denied");
       }
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
     })();
+
+    requestCameraPermission();
 
     navigation.setOptions({ tabBarStyle: { display: "none" } });
   }, []);
@@ -143,7 +154,8 @@ const CreatePostsScreen = ({ navigation }) => {
                   <View style={styles.previewPhotoContainer}>
                     <Image
                       source={{ uri: photo }}
-                      style={{ height: 100, width: 100 }}
+                      // style={{ height: 100, width: 100, position: "absolute" }}
+                      style={styles.previewPhoto}
                     />
                   </View>
                 )}
@@ -242,30 +254,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 16,
   },
-  goBackBtn: {
-    position: "absolute",
-    left: 15,
-    top: -15,
-    zIndex: 9,
-  },
   camera: {
     height: 240,
     borderRadius: 8,
     marginTop: 32,
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: 8,
   },
-  headerWrapper: {
-    justifyContent: "flex-end",
-    alignItems: "center",
-    height: 88,
-    borderBottomWidth: 1,
-    borderBottomColor: "#BDBDBD",
-  },
-  headerText: {
-    marginBottom: 11,
-    fontSize: 17,
-  },
+  // headerWrapper: {
+  //   justifyContent: "flex-end",
+  //   alignItems: "center",
+  //   height: 88,
+  //   borderBottomWidth: 1,
+  //   borderBottomColor: "#BDBDBD",
+  // },
+  // headerText: {
+  //   marginBottom: 11,
+  //   fontSize: 17,
+  // },
   fotoBox: {
     backgroundColor: "#F6F6F6",
     width: 343,
@@ -273,6 +280,7 @@ const styles = StyleSheet.create({
     marginTop: 32,
     alignItems: "center",
     justifyContent: "center",
+    borderRadius: 8,
   },
   icon: {
     width: 60,
@@ -287,12 +295,15 @@ const styles = StyleSheet.create({
     position: "absolute",
     marginTop: 32,
     marginHorizontal: 16,
+
+    width: "100%",
+    height: "100%",
+    borderRadius: 8,
   },
   previewPhoto: {
-    height: 240,
-    // height:"70%",
-    // width: 358,
+    // position: "absolute",
     width: "100%",
+    height: "100%",
     borderRadius: 8,
   },
   text: {

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -11,6 +11,7 @@ import {
   Image,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from "react-native";
 
 import { useDispatch } from "react-redux";
@@ -40,8 +41,7 @@ const initialState = {
 const RegistrationScreen = ({ navigation }) => {
   // console.log(Platform.OS);
   const [photo, setPhoto] = useState(null);
-
-  // console.log(storage)
+  const [isLoading, setIsLoading] = useState(false);
 
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [state, setState] = useState(initialState);
@@ -77,28 +77,52 @@ const RegistrationScreen = ({ navigation }) => {
     setPhoto(null);
   };
 
+
+
   const uploadPhotoToServer = async () => {
-    try {
-      const response = await fetch(photo.uri);
+try {
+  
+    const response = await fetch(photo.uri);
 
-      const file = await response.blob();
-      const uniquePostId = Date.now().toString();
+    const file = await response.blob();
 
-      // const storageRef = ref(storage, `avatar/${uniquePostId}`);
-      const storageRef = await ref(storage, `profileAvatar/${uniquePostId}`);
-      console.log(storageRef, "storageRef");
+    const uniquePostId = Date.now().toString();
+    const storageRef = ref(storage, `profileAvatar/${uniquePostId}/${file.data.name}`);
 
-      // const data = uploadBytesResumable(storageRef, file);
-   uploadBytes(storageRef, file);
+ uploadBytes(storageRef, file);
 
-      const getStorageRef = await getDownloadURL(storageRef);
-      console.log(getStorageRef, "getStorageRef");
+    const getStorageRef = await getDownloadURL(storageRef);
+    // console.log(getStorageRef, "getStorageRef");
 
-      return getStorageRef;
-    } catch (error) {
-      console.log(error);
-    }
+    return getStorageRef;
+} catch (error) {
+  console.log(error)
+}
+
   };
+
+  // async function uploadPhotoToServer() {
+  //   try {
+  //     const response = await fetch(photo.uri);
+
+  //     const file = await response.blob();
+  //     const uniquePostId = Date.now().toString();
+
+  //     const storageRef = ref(storage, `profileAvatar/${uniquePostId}`);
+  //     console.log(storageRef, "storageRef");
+
+  // uploadBytesResumable(storageRef, file);
+  //     // await uploadBytes(storageRef, file);
+  //     console.log("data")
+
+  //     const getStorageRef = await getDownloadURL(storageRef)
+  //     console.log(getStorageRef, "getStorageRef");
+
+  //     return getStorageRef;
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   async function handleSubmit() {
     try {
@@ -108,7 +132,7 @@ const RegistrationScreen = ({ navigation }) => {
       console.log("handleSubmit");
 
       // const avatar = photo ? await uploadPhotoToServer() : null;
-       const avatar =  await uploadPhotoToServer() 
+      const avatar = await uploadPhotoToServer();
 
       const user = {
         userName: state.userName,
@@ -116,14 +140,15 @@ const RegistrationScreen = ({ navigation }) => {
         password: state.password,
         photo: avatar,
       };
+      console.log(user);
 
       dispatch(authSignUpUser(user));
 
       // navigation.navigate("Home");
       // setState({ userName: "", email: "", password: "" });
 
-      setState(initialState);
-      setPhoto(null);
+      // setState(initialState);
+      // setPhoto(null);
     } catch (error) {
       console.log(error);
     }
@@ -173,7 +198,7 @@ const RegistrationScreen = ({ navigation }) => {
 
                 ...Platform.select({
                   ios: {
-                    marginTop: isShowKeyboard ? 200 : 219,
+                    marginTop: isShowKeyboard ? 195 : 219,
                   },
                   android: {
                     marginTop: isShowKeyboard ? -100 : 0,
@@ -335,7 +360,11 @@ const RegistrationScreen = ({ navigation }) => {
                   </Text>
                 </View>
                 <TouchableOpacity
-                  style={styles.button}
+                  // style={styles.button}
+                  style={{
+                    ...styles.button,
+                    marginTop: isShowKeyboard ? 30 : 43,
+                  }}
                   activeOpacity={0.8}
                   onPress={handleSubmit}
                 >
@@ -440,7 +469,7 @@ const styles = StyleSheet.create({
     color: "#1B4371",
   },
   button: {
-    marginTop: 43,
+    // marginTop: 43,
     backgroundColor: "#FF6C00",
     height: 61,
     borderRadius: 100,
