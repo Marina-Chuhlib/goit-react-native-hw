@@ -97,8 +97,8 @@ const RegistrationScreen = ({ navigation }) => {
         `profileAvatar/${uniquePostId}/${file.data.name}`
       );
 
-      // uploadBytesResumable(storageRef, file);
-       uploadBytes(storageRef, file);
+      // await uploadBytesResumable(storageRef, file);
+      uploadBytes(storageRef, file);
 
       const getStorageRef = await getDownloadURL(storageRef);
       // console.log(getStorageRef, "getStorageRef");
