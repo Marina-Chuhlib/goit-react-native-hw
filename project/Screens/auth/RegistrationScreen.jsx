@@ -77,62 +77,37 @@ const RegistrationScreen = ({ navigation }) => {
     setPhoto(null);
   };
 
-
-
   const uploadPhotoToServer = async () => {
-try {
-  
-    const response = await fetch(photo.uri);
+    try {
+      const response = await fetch(photo.uri);
 
-    const file = await response.blob();
+      const file = await response.blob();
 
-    const uniquePostId = Date.now().toString();
-    const storageRef = ref(storage, `profileAvatar/${uniquePostId}/${file.data.name}`);
+      const uniquePostId = Date.now().toString();
+      const storageRef = ref(
+        storage,
+        `profileAvatar/${uniquePostId}/${file.data.name}`
+      );
 
- uploadBytes(storageRef, file);
+      // uploadBytesResumable(storageRef, file);
+      await uploadBytes(storageRef, file);
 
-    const getStorageRef = await getDownloadURL(storageRef);
-    // console.log(getStorageRef, "getStorageRef");
+      const getStorageRef = await getDownloadURL(storageRef);
+      // console.log(getStorageRef, "getStorageRef");
 
-    return getStorageRef;
-} catch (error) {
-  console.log(error)
-}
-
+      return getStorageRef;
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  // async function uploadPhotoToServer() {
-  //   try {
-  //     const response = await fetch(photo.uri);
-
-  //     const file = await response.blob();
-  //     const uniquePostId = Date.now().toString();
-
-  //     const storageRef = ref(storage, `profileAvatar/${uniquePostId}`);
-  //     console.log(storageRef, "storageRef");
-
-  // uploadBytesResumable(storageRef, file);
-  //     // await uploadBytes(storageRef, file);
-  //     console.log("data")
-
-  //     const getStorageRef = await getDownloadURL(storageRef)
-  //     console.log(getStorageRef, "getStorageRef");
-
-  //     return getStorageRef;
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 
   async function handleSubmit() {
     try {
       setIsShowKeyboard(false);
       Keyboard.dismiss();
 
-      console.log("handleSubmit");
-
-      // const avatar = photo ? await uploadPhotoToServer() : null;
-      const avatar = await uploadPhotoToServer();
+      const avatar = photo ? await uploadPhotoToServer() : null;
+      // const avatar = await uploadPhotoToServer();
 
       const user = {
         userName: state.userName,
@@ -144,43 +119,12 @@ try {
 
       dispatch(authSignUpUser(user));
 
-      // navigation.navigate("Home");
-      // setState({ userName: "", email: "", password: "" });
-
-      // setState(initialState);
-      // setPhoto(null);
+      setState(initialState);
+      setPhoto(null);
     } catch (error) {
       console.log(error);
     }
   }
-
-  // const handleSubmit = async () => {
-  //   setIsShowKeyboard(false);
-  //   Keyboard.dismiss();
-
-  //   console.log("handleSubmit");
-
-  //   // const avatar = photo ? await uploadPhotoToServer() : null;
-  //   const avatar = await uploadPhotoToServer()
-  //   console.log(avatar, "storageRef");
-
-  //   const user = {
-  //     userName: state.userName,
-  //     email: state.email,
-  //     password: state.password,
-  //     photo: avatar,
-  //   };
-
-  //   console.log(user, "user");
-
-  //   dispatch(authSignUpUser(user));
-
-  //   // navigation.navigate("Home");
-  //   // setState({ userName: "", email: "", password: "" });
-
-  //   // setState(initialState);
-  //   // setPhoto(null);
-  // };
 
   return (
     <TouchableWithoutFeedback onPress={handleSubmit}>

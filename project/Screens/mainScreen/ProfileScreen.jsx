@@ -249,9 +249,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#E8E8E8",
     marginRight: 8,
     borderRadius: 16,
-
-    //    borderColor: "red",
-    // borderWidth: 2,
   },
   avatar: {
     width: "100%",
